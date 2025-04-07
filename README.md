@@ -2,9 +2,7 @@ This project is a web-based GIS application that allows users to view and intera
 
 ## Technologies Used
 
-List the main technologies and libraries you used in your project.
 
-For example:
 - React
 - React Leaflet
 - Axios
@@ -13,9 +11,11 @@ For example:
 - MongoDB
 - Leaflet CSS
 
+**Spatial data is stored using the GeoJSON format within the MongoDB database.**
+
 ## Setup Instructions
 
-Provide clear and concise instructions on how to get the project running locally.
+
 
 1.  **Clone the repository:**
     ```bash
