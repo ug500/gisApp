@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import axios from 'axios';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -40,22 +40,45 @@ const ResourceMap = () => {
 
     const bounds = new L.LatLngBounds();
     resources.forEach(resource => {
-      bounds.extend([resource.location.coordinates[1], resource.location.coordinates[0]]);
+      if (resource.location.type === 'Point') {
+        bounds.extend([resource.location.coordinates[1], resource.location.coordinates[0]]);
+      } else if (resource.location.type === 'LineString') {
+        resource.location.coordinates.forEach(coord => {
+          bounds.extend([coord[1], coord[0]]);
+        });
+      }
     });
     mapRef.current.fitBounds(bounds, { padding: [50, 50] });
   };
 
   const ResourceMarker = ({ resource }) => {
-    return (
-      <Marker
-        key={resource._id}
-        position={[resource.location.coordinates[1], resource.location.coordinates[0]]}
-      >
-        <Popup>
-          {resource.name} <br /> {resource.description}
-        </Popup>
-      </Marker>
-    );
+    if (resource.location.type === 'Point') {
+      return (
+        <Marker
+          key={resource._id}
+          position={[resource.location.coordinates[1], resource.location.coordinates[0]]}
+        >
+          <Popup>
+            {resource.name} <br /> {resource.description}
+          </Popup>
+        </Marker>
+      );
+    } else if (resource.location.type === 'LineString') {
+      const positions = resource.location.coordinates.map(coord => [coord[1], coord[0]]);
+      return (
+        <Polyline
+          key={resource._id}
+          positions={positions}
+          color="blue"
+          weight={3}
+        >
+          <Popup>
+            {resource.name} <br /> {resource.description}
+          </Popup>
+        </Polyline>
+      );
+    }
+    return null;
   };
 
   if (loading) {
@@ -65,6 +88,7 @@ const ResourceMap = () => {
   if (error) {
     return <div className="error-message">{error}</div>;
   }
+
   return (
     <MapContainer
       ref={mapRef}

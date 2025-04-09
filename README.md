@@ -40,7 +40,7 @@ This project is a web-based GIS application that allows users to view and intera
 
 4.  **Start the backend server:**
     ```bash
-    npm start  # or yarn start
+    node index.js  # or yarn start
     ```
     *(Note the script defined in your `server/package.json`)*
 

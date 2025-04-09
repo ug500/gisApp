@@ -5,20 +5,19 @@ const resourceSchema = new mongoose.Schema({
   location: {
     type: {
       type: String,
-      enum: ['Point'],
+      enum: ['Point', 'LineString'],
       required: true
     },
     coordinates: {
-      type: [Number],
-      required: true,
-      index: '2dsphere' // Geospatial index
+      type: mongoose.Schema.Types.Mixed,
+      required: true
     }
   },
   type: String,
   description: String
 });
 
-// Ensure the index is created
-resourceSchema.index({ location: '2dsphere' });
+// Remove all indexes
+resourceSchema.set('autoIndex', false);
 
 module.exports = mongoose.model('Resource', resourceSchema);
