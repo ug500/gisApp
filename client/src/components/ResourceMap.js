@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, Polygon } from 'react-leaflet';
 import axios from 'axios';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import '../App.css';
 
 // Fix for Leaflet's default marker icon path issue
 delete L.Icon.Default.prototype._getIconUrl;
@@ -20,13 +21,20 @@ const ResourceMap = () => {
 
   useEffect(() => {
     setLoading(true);
-    axios.get('http://localhost:9000/api/resources')
-      .then(response => {
-        setResources(response.data);
+    Promise.all([
+      axios.get('http://localhost:9000/api/points'),
+      axios.get('http://localhost:9000/api/linestrings'),
+      axios.get('http://localhost:9000/api/polygons'),
+    ])
+      .then(([pointsResponse, lineStringsResponse, polygonsResponse]) => {
+        const allResources = [
+          ...pointsResponse.data,
+          ...lineStringsResponse.data,
+          ...polygonsResponse.data,
+        ];
+        setResources(allResources);
+        console.log('Client-side resources:', allResources);
         setLoading(false);
-        if (response.data.length > 0) {
-          fitMapToBounds(response.data);
-        }
       })
       .catch(error => {
         console.error('Error fetching resources:', error);
@@ -35,29 +43,6 @@ const ResourceMap = () => {
       });
   }, []);
 
-  const fitMapToBounds = (resources) => {
-    if (!mapRef.current) return;
-
-    const bounds = new L.LatLngBounds();
-    resources.forEach(resource => {
-      bounds.extend([resource.location.coordinates[1], resource.location.coordinates[0]]);
-    });
-    mapRef.current.fitBounds(bounds, { padding: [50, 50] });
-  };
-
-  const ResourceMarker = ({ resource }) => {
-    return (
-      <Marker
-        key={resource._id}
-        position={[resource.location.coordinates[1], resource.location.coordinates[0]]}
-      >
-        <Popup>
-          {resource.name} <br /> {resource.description}
-        </Popup>
-      </Marker>
-    );
-  };
-
   if (loading) {
     return <div>Loading resources...</div>;
   }
@@ -65,21 +50,66 @@ const ResourceMap = () => {
   if (error) {
     return <div className="error-message">{error}</div>;
   }
+
   return (
-    <MapContainer
-      ref={mapRef}
-      center={[0, 0]}
-      zoom={2}
-      style={{ height: '800px', width: '100%' }}
-    >
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
-      {resources.map(resource => (
-        <ResourceMarker key={resource._id} resource={resource} />
-      ))}
-    </MapContainer>
+    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}>
+      <MapContainer
+        ref={mapRef}
+        center={[40.71, -74.00]}
+        zoom={12}
+        style={{ width: '100%', height: '100%' }}
+        onError={(error) => console.error('MapContainer Error (Minimal):', error)}
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+        {resources.map(resource => {
+          if (resource.location && resource.location.type === 'Point') {
+            return (
+              <Marker
+                key={resource._id}
+                position={[resource.location.coordinates[1], resource.location.coordinates[0]]}
+              >
+                <Popup>
+                  <h3>{resource.name}</h3>
+                  <p>{resource.description}</p>
+                </Popup>
+              </Marker>
+            );
+          } else if (resource.location && resource.location.type === 'LineString' && Array.isArray(resource.location.coordinates) && resource.location.coordinates.length > 1) {
+            return (
+              <Polyline
+                key={resource._id}
+                positions={resource.location.coordinates.map(coord => [coord[1], coord[0]])}
+                color="blue"
+                weight={3}
+              >
+                <Popup>
+                  <h3>{resource.name}</h3>
+                  <p>{resource.description}</p>
+                </Popup>
+              </Polyline>
+            );
+          } else if (resource.location && resource.location.type === 'Polygon' && Array.isArray(resource.location.coordinates) && resource.location.coordinates.length > 0) {
+            return (
+              <Polygon
+                key={resource._id}
+                positions={resource.location.coordinates.map(ring => ring.map(coord => [coord[1], coord[0]]))}
+                color="green"
+                fillOpacity={0.3}
+              >
+                <Popup>
+                  <h3>{resource.name}</h3>
+                  <p>{resource.description}</p>
+                </Popup>
+              </Polygon>
+            );
+          }
+          return null;
+        })}
+      </MapContainer>
+    </div>
   );
 };
 
