@@ -38,4 +38,4 @@ npm install
 node index.js
 
 עדכון מיקומים (מתבצע אוטומטית מהאפליקציה):
-POST http://localhost:5000/api/update-invasion
+POST https://invasion-api.onrender.com/api/invasion

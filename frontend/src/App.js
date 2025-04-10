@@ -5,6 +5,7 @@ import polyline from 'polyline';
 import L from 'leaflet';
 
 const center = [31.5, 34.8];
+const API_BASE = "https://invasion-api.onrender.com";
 
 const ClickHandler = ({ setLanding }) => {
   useMapEvents({
@@ -16,13 +17,13 @@ const ClickHandler = ({ setLanding }) => {
 };
 
 const alienIcon = (number) => L.divIcon({
-  html: `<div style=\"font-size:24px;\">👽<span style=\"color:black; font-weight:bold; font-size:14px;\">${number}</span></div>`,
+  html: `<div style="font-size:24px;">👽<span style="color:black; font-weight:bold; font-size:14px;">${number}</span></div>`,
   className: 'alien-icon',
   iconSize: [30, 30],
 });
 
 const landingIcon = L.divIcon({
-  html: '<div style=\"font-size:28px;\">🛸</div>',
+  html: '<div style="font-size:28px;">🛸</div>',
   className: 'landing-icon',
   iconSize: [30, 30],
 });
@@ -33,7 +34,7 @@ export default function App() {
 
   const getRoute = async (from, to) => {
     const res = await axios.get(
-      `http://localhost:5000/api/route?fromLat=${from[0]}&fromLng=${from[1]}&toLat=${to[0]}&toLng=${to[1]}`
+      `${API_BASE}/api/route?fromLat=${from[0]}&fromLng=${from[1]}&toLat=${to[0]}&toLng=${to[1]}`
     );
     return polyline
       .decode(res.data.routes[0].geometry)
@@ -46,9 +47,10 @@ export default function App() {
     const createAliens = async () => {
       const directions = [0, 45, 90, 135, 180, 225, 270, 315];
       const alienPromises = directions.map(async (angle) => {
+        const rad = angle * (Math.PI / 180);
         const target = [
-          landing.lat + 0.05 * Math.cos(angle),
-          landing.lng + 0.05 * Math.sin(angle),
+          landing.lat + 0.05 * Math.cos(rad),
+          landing.lng + 0.05 * Math.sin(rad),
         ];
         const route = await getRoute([landing.lat, landing.lng], target);
         return {
@@ -66,38 +68,38 @@ export default function App() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      aliens.forEach(async (alien, idx) => {
-        let newIdx = alien.positionIdx + 1;
-
-        if (newIdx >= alien.route.length) {
-          const currentPos = alien.route[alien.route.length - 1];
-
-          let newRoute = await getRoute(currentPos, [
-            currentPos[0] + (Math.random() - 0.5) / 10,
-            currentPos[1] + (Math.random() - 0.5) / 10,
-          ]);
-
-          if (!newRoute || newRoute.length < 2) {
-            newRoute = alien.route.slice().reverse();
-          }
-
-          setAliens(prevAliens => {
-            const updatedAliens = [...prevAliens];
-            updatedAliens[idx] = { route: newRoute, positionIdx: 0 };
-            return updatedAliens;
-          });
-        } else {
-          setAliens(prevAliens => {
-            const updatedAliens = [...prevAliens];
-            updatedAliens[idx] = { ...alien, positionIdx: newIdx };
-            return updatedAliens;
-          });
-        }
-      });
+      const updateAliens = async () => {
+        const updated = await Promise.all(
+          aliens.map(async (alien, idx) => {
+            let newIdx = alien.positionIdx + 1;
+  
+            if (newIdx >= alien.route.length) {
+              const currentPos = alien.route[alien.route.length - 1];
+              let newRoute = await getRoute(currentPos, [
+                currentPos[0] + (Math.random() - 0.5) / 10,
+                currentPos[1] + (Math.random() - 0.5) / 10,
+              ]);
+  
+              if (!newRoute || newRoute.length < 2) {
+                newRoute = alien.route.slice().reverse();
+              }
+  
+              return { route: newRoute, positionIdx: 0 };
+            }
+  
+            return { ...alien, positionIdx: newIdx };
+          })
+        );
+  
+        setAliens(updated);
+      };
+  
+      updateAliens();
     }, 1000);
-
+  
     return () => clearInterval(interval);
   }, [aliens]);
+  
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -128,7 +130,7 @@ export default function App() {
         ],
       };
 
-      axios.post('http://localhost:5000/api/update-invasion', geoJSON);
+      axios.post(`${API_BASE}/api/update-invasion`, geoJSON);
     }, 1000);
 
     return () => clearInterval(interval);
