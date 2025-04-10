@@ -36,6 +36,9 @@ app.get('/api/route', async (req, res) => {
   }
 });
 
+//console.error("OSRM Error:", error.message);
+
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
