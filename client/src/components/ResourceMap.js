@@ -1,84 +1,95 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
 import axios from 'axios';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
 
-// Fix for Leaflet's default marker icon path issue
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-  iconUrl: require('leaflet/dist/images/marker-icon.png'),
-  shadowUrl: require('leaflet/dist/images/marker-shadow.png')
-});
+const createEmojiIcon = (emoji, label, isLanding = false) =>
+  L.divIcon({
+    html: `
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <div style="font-size: 24px;">${emoji}</div>
+        <div style="
+          ${isLanding
+            ? 'background-color: black; color: white;'
+            : 'background-color: transparent; color: black;'}
+          padding: 2px 6px;
+          border-radius: 4px;
+          font-size: 12px;
+          margin-top: 2px;
+        ">${label}</div>
+      </div>
+    `,
+    className: 'emoji-icon',
+    iconSize: [30, 42],
+    iconAnchor: [15, 42],
+    popupAnchor: [0, -30],
+  });
 
 const ResourceMap = () => {
-  const [resources, setResources] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const mapRef = useRef(null);
+  const [features, setFeatures] = useState([]);
 
   useEffect(() => {
-    setLoading(true);
-    axios.get('http://localhost:9000/api/resources')
-      .then(response => {
-        setResources(response.data);
-        setLoading(false);
-        if (response.data.length > 0) {
-          fitMapToBounds(response.data);
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching resources:', error);
-        setError('Failed to load resources.');
-        setLoading(false);
-      });
+    const fetchData = () => {
+      axios
+        .get('http://localhost:9000/api/invasion') // או '/api/invasion' אם יש proxy
+        .then((res) => setFeatures(res.data.features || []))
+        .catch((err) => console.error('Failed to fetch data:', err));
+    };
+
+    fetchData();
+    const interval = setInterval(fetchData, 2000);
+    return () => clearInterval(interval);
   }, []);
 
-  const fitMapToBounds = (resources) => {
-    if (!mapRef.current) return;
-
-    const bounds = new L.LatLngBounds();
-    resources.forEach(resource => {
-      bounds.extend([resource.location.coordinates[1], resource.location.coordinates[0]]);
-    });
-    mapRef.current.fitBounds(bounds, { padding: [50, 50] });
-  };
-
-  const ResourceMarker = ({ resource }) => {
-    return (
-      <Marker
-        key={resource._id}
-        position={[resource.location.coordinates[1], resource.location.coordinates[0]]}
-      >
-        <Popup>
-          {resource.name} <br /> {resource.description}
-        </Popup>
-      </Marker>
-    );
-  };
-
-  if (loading) {
-    return <div>Loading resources...</div>;
-  }
-
-  if (error) {
-    return <div className="error-message">{error}</div>;
-  }
   return (
     <MapContainer
-      ref={mapRef}
-      center={[0, 0]}
-      zoom={2}
+      center={[31.6, 34.77]}
+      zoom={11}
       style={{ height: '800px', width: '100%' }}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution="&copy; OpenStreetMap contributors"
       />
-      {resources.map(resource => (
-        <ResourceMarker key={resource._id} resource={resource} />
-      ))}
+
+      {features.map((feature, idx) => {
+        const { type, locationName, landingCode, alienCode } = feature.properties;
+        const coords = feature.geometry.coordinates;
+        const position = [coords[1], coords[0]];
+
+        if (type === 'landing') {
+          return (
+            <Marker
+              key={`landing-${idx}`}
+              position={position}
+              icon={createEmojiIcon('🛸', `${locationName} (${landingCode})`, true)}
+            >
+              <Popup>
+                <b>Landing</b><br />
+                {locationName} - {landingCode}
+              </Popup>
+            </Marker>
+          );
+        }
+
+        if (type === 'alien') {
+          return (
+            <Marker
+              key={`alien-${idx}`}
+              position={position}
+              icon={createEmojiIcon('👽', alienCode)}
+            >
+              <Popup>
+                <b>Alien</b><br />
+                Code: {alienCode}
+              </Popup>
+            </Marker>
+          );
+        }
+
+        return null;
+      })}
     </MapContainer>
   );
 };
