@@ -4,32 +4,44 @@ import L from 'leaflet';
 import axios from 'axios';
 import 'leaflet/dist/leaflet.css';
 
-const createEmojiIcon = (emoji, labelTop, isLanding = false) =>
+const createEmojiIcon = (emoji, label, isLanding = false) =>
   L.divIcon({
     html: `
-      <div style="position: relative; display: flex; flex-direction: column; align-items: center;">
+      <div style="display: flex; flex-direction: column; align-items: center;">
         ${
           isLanding
             ? `<div style="
-                position: absolute;
-                top: -18px;
                 background-color: black;
                 color: white;
                 padding: 1px 4px;
                 border-radius: 4px;
                 font-size: 10px;
+                margin-bottom: 2px;
                 white-space: nowrap;
-              ">${labelTop}</div>`
+              ">${label}</div>`
             : ''
         }
         <div style="font-size: 24px;">${emoji}</div>
+        ${
+          !isLanding
+            ? `<div style="
+                background-color: transparent;
+                color: black;
+                padding: 1px 4px;
+                font-size: 12px;
+                margin-top: -6px;
+                white-space: nowrap;
+              ">${label}</div>`
+            : ''
+        }
       </div>
     `,
     className: 'emoji-icon',
-    iconSize: [30, 30],
-    iconAnchor: [15, 15], // נקודת העיגון – מרכז הצלחת
+    iconSize: [30, 42],
+    iconAnchor: [15, 21],
     popupAnchor: [0, -30],
   });
+
 
 
 
