@@ -1,0 +1,9 @@
+/* MunicipalitiesMap.module.css */
+.municipalityPolygon {
+    fill-opacity: 0.2;
+    stroke: blue;
+    stroke-width: 1;
+    opacity: 1;
+  }
+  
+  /* You can add more specific styles here if needed */
