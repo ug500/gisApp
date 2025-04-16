@@ -29,7 +29,10 @@ export default function MainMap() {
 
     const loadInvasion = () => {
       axios.get('https://invasion-api.onrender.com/api/invasion')
-        .then(res => setInvasionData(res.data.features))
+        .then(res =>{
+          console.log('Invasion Data:', res.data); // <------------------ IMPORTANT LOG
+        setInvasionData(res.data.features);
+        })
         .catch(err => console.error('Failed to load invasion data', err));
     };
     loadInvasion();

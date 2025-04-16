@@ -10,7 +10,6 @@ import axios from 'axios';
 import '../components/Navbar.css';
 import '../components/LogPanel.css';
 
-
 const center = [31.5, 34.8];
 const zoom = 8;
 
@@ -24,7 +23,10 @@ export default function MainMap() {
 
   useEffect(() => {
     axios.get('http://localhost:5000/api/municipalities')
-      .then(res => setMunicipalities(res.data))
+      .then(res => {
+        console.log('Municipalities Data:', res.data); // <------------------ IMPORTANT LOG
+        setMunicipalities(res.data);
+      })
       .catch(err => console.error('Failed to load municipalities', err));
 
     const loadInvasion = () => {

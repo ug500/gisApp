@@ -7,12 +7,15 @@ const strongColors = [
 ];
 
 export default function MunicipalitiesLayer({ data }) {
-  if (!data || !data.features) return null;
+  if (!data || !Array.isArray(data)) return null;
+
+  let featureIndex = 0; // Maintain index outside the style function
 
   const style = (feature) => {
-    const index = data.features.indexOf(feature);
+    const color = strongColors[featureIndex % strongColors.length];
+    featureIndex++; // Increment for the next feature
     return {
-      fillColor: strongColors[index % strongColors.length],
+      fillColor: color,
       fillOpacity: 0.2,
       weight: 1,
       color: 'blue'
