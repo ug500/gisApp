@@ -1,22 +1,18 @@
-import React from 'react';
-import { GeoJSON } from 'react-leaflet';
+const express = require('express');
+const router = express.Router();
+const Municipality = require('../models/municipalities'); // ודא שהקובץ הזה קיים
 
-export default function MunicipalitiesLayer({ data }) {
-  if (!data || !data.features) return null;
+router.get('/', async (req, res) => {
+  try {
+    const municipalities = await Municipality.find({});
+    res.json({
+      type: "FeatureCollection",
+      features: municipalities
+    });
+  } catch (error) {
+    console.error('Error fetching municipalities:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
-  return (
-    <GeoJSON
-      data={data}
-      style={() => ({
-        color: 'red',
-        weight: 3,
-        fillColor: 'orange',
-        fillOpacity: 0.5
-      })}
-      onEachFeature={(feature, layer) => {
-        const name = feature.properties.MUN_HEB || 'לא ידוע';
-        layer.bindPopup(name);
-      }}
-    />
-  );
-}
+module.exports = router;
