@@ -9,7 +9,7 @@ import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
 import '../components/Navbar.css';
 import '../components/LogPanel.css';
-
+import assignAliensToMunicipalities from '../utils/assignAliensToMunicipalities';
 
 const center = [31.5, 34.8];
 const zoom = 8;
@@ -29,13 +29,23 @@ export default function MainMap() {
 
     const loadInvasion = () => {
       axios.get('https://invasion-api.onrender.com/api/invasion')
-        .then(res => setInvasionData(res.data.features))
+        .then(res => {
+          const features = res.data.features;
+          if (municipalities && municipalities.features) {
+            const aliens = features.filter(f => f.properties?.type === 'alien');
+            const others = features.filter(f => f.properties?.type !== 'alien');
+            const updatedAliens = assignAliensToMunicipalities(aliens, municipalities);
+            setInvasionData([...others, ...updatedAliens]);
+          } else {
+            setInvasionData(features);
+          }
+        })
         .catch(err => console.error('Failed to load invasion data', err));
     };
     loadInvasion();
     const interval = setInterval(loadInvasion, 2000);
     return () => clearInterval(interval);
-  }, []);
+  }, [municipalities]);
 
   return (
     <div style={{ height: '100vh', width: '100%', position: 'relative' }}>
