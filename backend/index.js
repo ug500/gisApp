@@ -18,6 +18,10 @@ app.use(express.json());
 // Serve static files from the client-side public folder
 app.use(express.static(PUBLIC_DIR));
 
+
+const invasionHistoryRoutes = require('./routes/invasionHistory');
+app.use('/api/history', invasionHistoryRoutes);
+
 // Use separate route files
 app.use('/api/municipalities', municipalityRoutes);
 

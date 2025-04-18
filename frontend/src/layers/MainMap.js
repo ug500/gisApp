@@ -5,6 +5,8 @@ import InvasionLayer from './InvasionLayer';
 import LayerToggle from './LayerToggle';
 import Navbar from '../components/Navbar';
 import LogPanel from '../components/LogPanel';
+import HistoricalInvasionLayer from './HistoricalInvasionLayer';
+
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
 import '../components/Navbar.css';
@@ -15,6 +17,7 @@ import localMunicipalities from '../municipalities.json';
 const center = [31.5, 34.8];
 const zoom = 8;
 
+
 export default function MainMap() {
   const [showMunicipalities, setShowMunicipalities] = useState(true);
   const [showInvasion, setShowInvasion] = useState(true);
@@ -22,6 +25,7 @@ export default function MainMap() {
 
   const [municipalities, setMunicipalities] = useState(null);
   const [invasionData, setInvasionData] = useState([]);
+  const [showHistory, setShowHistory] = useState(false);
 
   useEffect(() => {
     setMunicipalities(localMunicipalities);
@@ -44,11 +48,14 @@ export default function MainMap() {
     <div style={{ height: '100vh', width: '100%', position: 'relative' }}>
       <Navbar onToggleLog={() => setShowLog(!showLog)} />
       <LayerToggle
-        showMunicipalities={showMunicipalities}
-        setShowMunicipalities={setShowMunicipalities}
-        showInvasion={showInvasion}
-        setShowInvasion={setShowInvasion}
-      />
+  showMunicipalities={showMunicipalities}
+  setShowMunicipalities={setShowMunicipalities}
+  showInvasion={showInvasion}
+  setShowInvasion={setShowInvasion}
+  showHistory={showHistory}
+  setShowHistory={setShowHistory}
+/>
+
       <LogPanel visible={showLog} data={invasionData} />
       
       <MapContainer
@@ -59,11 +66,19 @@ export default function MainMap() {
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {showMunicipalities && municipalities && (
-          <MunicipalitiesLayer data={municipalities} aliens={invasionData} />
+         <MunicipalitiesLayer data={municipalities} aliens={showInvasion ? invasionData : []} />
+
+
         )}
         {showInvasion && invasionData.length > 0 && (
           <InvasionLayer data={invasionData} />
         )}
+       {showInvasion && <InvasionLayer data={invasionData} />}
+       {showHistory && municipalities && (
+  <HistoricalInvasionLayer visible={true} municipalities={municipalities} />
+)}
+
+
       </MapContainer>
     </div>
   );

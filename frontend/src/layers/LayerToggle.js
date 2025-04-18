@@ -5,7 +5,9 @@ export default function LayerToggle({
   showMunicipalities,
   setShowMunicipalities,
   showInvasion,
-  setShowInvasion
+  setShowInvasion,
+  showHistory,
+  setShowHistory
 }) {
   return (
     <div className="layer-controls">
@@ -25,6 +27,15 @@ export default function LayerToggle({
           onChange={() => setShowInvasion(!showInvasion)}
         />
         פלישת חייזרים
+      </label>
+      <br />
+      <label>
+        <input
+          type="checkbox"
+          checked={showHistory}
+          onChange={() => setShowHistory(!showHistory)}
+        />
+        פלישות היסטוריות
       </label>
     </div>
   );
