@@ -1,21 +1,20 @@
 .navbar {
   background-color: black;
   color: white;
-  padding: 10px;
+  padding: 10px 20px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-}
-
-.navbar-left {
-  display: flex;
-  align-items: center;
+  position: relative;
+  z-index: 1100;
 }
 
 .navbar-title {
-  font-size: 18px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 20px;
   font-weight: bold;
-  margin: auto;
+  white-space: nowrap;
 }
 
 .log-button {
@@ -26,6 +25,7 @@
   cursor: pointer;
   border-radius: 4px;
   font-weight: bold;
+  margin-left: auto; /* keep it aligned right */
 }
 
 .log-button:hover {

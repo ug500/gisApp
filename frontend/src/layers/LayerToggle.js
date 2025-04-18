@@ -1,5 +1,5 @@
 import React from 'react';
-import './LayerToggle.css';
+import './LayerToggle.css'; // Make sure this file has the .layer-controls CSS
 
 export default function LayerToggle({
   showMunicipalities,
@@ -8,7 +8,7 @@ export default function LayerToggle({
   setShowInvasion
 }) {
   return (
-    <div style={{ position: 'absolute', top: 10, right: 10, zIndex: 1000, background: 'white', padding: '10px', borderRadius: '6px', boxShadow: '0 0 8px rgba(0,0,0,0.2)' }}>
+    <div className="layer-controls">
       <label>
         <input
           type="checkbox"
