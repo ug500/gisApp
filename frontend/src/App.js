@@ -1,6 +1,10 @@
-import React from 'react';
-import MainMap from './layers/MainMap';
+// 📁 src/App.js
+import React from "react";
+import TacticalLayout from "./components/TacticalLayout";
+import "./App.css";
 
-export default function App() {
-  return <MainMap />;
+function App() {
+  return <TacticalLayout />;
 }
+
+export default App;

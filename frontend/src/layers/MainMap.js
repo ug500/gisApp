@@ -1,85 +1,51 @@
+// 📁 src/layers/MainMap.js
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 import MunicipalitiesLayer from './MunicipalitiesLayer';
 import InvasionLayer from './InvasionLayer';
-import LayerToggle from './LayerToggle';
-import Navbar from '../components/Navbar';
-import LogPanel from '../components/LogPanel';
 import HistoricalInvasionLayer from './HistoricalInvasionLayer';
-
-import 'leaflet/dist/leaflet.css';
-import axios from 'axios';
-import '../components/Navbar.css';
-import '../components/LogPanel.css';
-
-import localMunicipalities from '../municipalities.json';
-
-const center = [31.5, 34.8];
-const zoom = 8;
+import LogPanel from '../components/LogPanel';
+import localMunicipalities from '../data/municipalities.json';
 
 
-export default function MainMap() {
+const MainMap = () => {
   const [showMunicipalities, setShowMunicipalities] = useState(true);
   const [showInvasion, setShowInvasion] = useState(true);
   const [showLog, setShowLog] = useState(false);
-
-  const [municipalities, setMunicipalities] = useState(null);
-  const [invasionData, setInvasionData] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
+  const [invasionData, setInvasionData] = useState([]);
+  const [municipalities, setMunicipalities] = useState(localMunicipalities);
 
   useEffect(() => {
-    setMunicipalities(localMunicipalities);
-  }, []);
-
-  useEffect(() => {
-    const loadInvasion = () => {
-      axios
-        .get('https://invasion-api.onrender.com/api/invasion')
-        .then(res => setInvasionData(res.data.features))
-        .catch(err => console.error('Failed to load invasion data', err));
+    const fetchInvasion = () => {
+      fetch('https://invasion-api.onrender.com/api/invasion')
+        .then(res => res.json())
+        .then(data => setInvasionData(data.features || []))
+        .catch(err => console.error('Error loading invasion data', err));
     };
 
-    loadInvasion();
-    const interval = setInterval(loadInvasion, 1000);
+    fetchInvasion();
+    const interval = setInterval(fetchInvasion, 2000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div style={{ height: '100vh', width: '100%', position: 'relative' }}>
-      <Navbar onToggleLog={() => setShowLog(!showLog)} />
-      <LayerToggle
-  showMunicipalities={showMunicipalities}
-  setShowMunicipalities={setShowMunicipalities}
-  showInvasion={showInvasion}
-  setShowInvasion={setShowInvasion}
-  showHistory={showHistory}
-  setShowHistory={setShowHistory}
-/>
+    <div style={{ height: '100%', width: '100%', position: 'relative' }}>
+  
 
       <LogPanel visible={showLog} data={invasionData} />
-      
-      <MapContainer
-        center={center}
-        zoom={zoom}
-        zoomControl={true}
-        style={{ height: '100%', width: '100%' }}
-      >
+
+      <MapContainer center={[31.7683, 35.2137]} zoom={8} style={{ height: '100%', width: '100%' }}>
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {showMunicipalities && municipalities && (
-         <MunicipalitiesLayer data={municipalities} aliens={showInvasion ? invasionData : []} />
-
-
+          <MunicipalitiesLayer data={municipalities} aliens={invasionData} />
         )}
-        {showInvasion && invasionData.length > 0 && (
-          <InvasionLayer data={invasionData} />
-        )}
-       {showInvasion && <InvasionLayer data={invasionData} />}
-       {showHistory && municipalities && (
-  <HistoricalInvasionLayer visible={true} municipalities={municipalities} />
-)}
-
-
+        {showInvasion && <InvasionLayer data={invasionData} />}
+        {showHistory && <HistoricalInvasionLayer />}
       </MapContainer>
     </div>
   );
-}
+};
+
+export default MainMap;

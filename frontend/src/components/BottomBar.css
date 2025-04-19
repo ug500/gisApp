@@ -1,0 +1,21 @@
+
+.bottom-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  font-size: 12px;
+  background-color: #111;
+  border-top: 1px solid #333;
+}
+.status-counts span {
+  margin-right: 10px;
+}
+.search-input {
+  background: #222;
+  border: 1px solid #444;
+  color: white;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+}

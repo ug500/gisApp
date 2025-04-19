@@ -1,42 +1,33 @@
 import React from 'react';
-import './LayerToggle.css'; // Make sure this file has the .layer-controls CSS
 
-export default function LayerToggle({
-  showMunicipalities,
-  setShowMunicipalities,
-  showInvasion,
-  setShowInvasion,
-  showHistory,
-  setShowHistory
+function LayerToggle({
+  onToggleLandings,
+  onToggleAliens,
+  onToggleShelters,
+  onToggleWeather,
+  onToggleNightMode,
 }) {
+  const buttonStyle = {
+    fontSize: '24px',
+    padding: '10px',
+    marginBottom: '8px',
+    background: '#333',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+  };
+
   return (
-    <div className="layer-controls">
-      <label>
-        <input
-          type="checkbox"
-          checked={showMunicipalities}
-          onChange={() => setShowMunicipalities(!showMunicipalities)}
-        />
-        רשויות מקומיות
-      </label>
-      <br />
-      <label>
-        <input
-          type="checkbox"
-          checked={showInvasion}
-          onChange={() => setShowInvasion(!showInvasion)}
-        />
-        פלישת חייזרים
-      </label>
-      <br />
-      <label>
-        <input
-          type="checkbox"
-          checked={showHistory}
-          onChange={() => setShowHistory(!showHistory)}
-        />
-        פלישות היסטוריות
-      </label>
+    <div style={{ display: 'flex', flexDirection: 'column', position: 'absolute', right: 10, top: 50, zIndex: 1000 }}>
+      <button onClick={onToggleLandings} style={buttonStyle}>🛸</button>
+      <button onClick={onToggleAliens} style={buttonStyle}>👽</button>
+      <button onClick={onToggleShelters} style={buttonStyle}>🛖</button>
+      <button onClick={onToggleWeather} style={buttonStyle}>🌦</button>
+      <button style={buttonStyle}>🔲</button> {/* שמור לעתיד */}
+      <button onClick={onToggleNightMode} style={buttonStyle}>🌙</button>
     </div>
   );
 }
+
+export default LayerToggle;
