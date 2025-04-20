@@ -1,16 +1,12 @@
+# Node modules and caches
 node_modules/
-.env
-.env.*
-*.log
+.cache/
+**/.cache/
+*.pack
+
+# Build and logs
 build/
-*.sqlite
-*.db
-npm-debug.log
-yarn-debug.log
-/coverage
+dist/
+npm-debug.log*
+.env
 .DS_Store
-Thumbs.db
-*.tmp
-*.swp
-.idea/
-.vscode/

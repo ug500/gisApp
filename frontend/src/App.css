@@ -1,0 +1,91 @@
+/* איפוס כללי */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden; /* או auto אם אתה רוצה לאפשר גלילה רק כשצריך */
+}
+
+
+
+
+
+/* ✅ Move zoom controls below toggle safely */
+.leaflet-control-zoom {
+  position: absolute !important;
+  top: 120px !important; /* just below navbar + toggle */
+  right: 10px !important;
+  left: auto !important;
+  bottom: auto !important;
+  z-index: 1000 !important;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 6px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+  padding: 4px;
+}
+/* ✅ Force zoom control to top-right, below toggle */
+.leaflet-top.leaflet-left .leaflet-control-zoom {
+  display: none !important; /* hide if rendered in default top-left */
+}
+
+.leaflet-top.leaflet-right .leaflet-control-zoom {
+  position: absolute !important;
+  top: 120px !important;  /* adjust based on toggle position */
+  right: 10px !important;
+  left: auto !important;
+  bottom: auto !important;
+  z-index: 1001 !important;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  padding: 4px;
+}
+
+/* 📁 src/App.css */
+.tactical-layout {
+  display: grid;
+  grid-template-columns: 80px 1fr 80px;
+  grid-template-rows: 40px 1fr 40px;
+  grid-template-areas:
+    "topbar topbar topbar"
+    "left main right"
+    "bottombar bottombar bottombar";
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.top-bar {
+  grid-area: topbar;
+
+}
+
+.side-panel-left {
+  grid-area: left;
+
+}
+
+.side-panel-right {
+  grid-area: right;
+
+}
+
+.main-map-container {
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+
+.bottom-bar {
+  grid-area: bottombar;
+  background-color: black;
+}
+

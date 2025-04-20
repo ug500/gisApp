@@ -1,0 +1,14 @@
+
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Testville" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[35.0, 31.0], [35.2, 31.0], [35.2, 31.2], [35.0, 31.2], [35.0, 31.0]]]
+      }
+    }
+  ]
+}
