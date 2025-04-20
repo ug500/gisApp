@@ -6,16 +6,39 @@ import "./SidePanelRight.css";
 const SidePanelRight = ({
   showMunicipalities,
   setShowMunicipalities,
+  showLandings,
+  setShowLandings,
+  showHistory,
+  setShowHistory,
   showAliens,
   setShowAliens,
+  showShelters,
+  setShowShelters,
+  showWeather,
+  setShowWeather,
+  nightMode,
+  setNightMode,
 }) => {
   return (
     <div className="side-panel-right">
       <LayerToggle
+        // פונקציות הדלקה/כיבוי
+        onToggleMunicipalities={() => setShowMunicipalities(!showMunicipalities)}
+        onToggleLandings={() => setShowLandings(!showLandings)}
+        onToggleHistory={() => setShowHistory(!showHistory)}
+        onToggleAliens={() => setShowAliens(!showAliens)}
+        onToggleShelters={() => setShowShelters(!showShelters)}
+        onToggleWeather={() => setShowWeather(!showWeather)}
+        onToggleNightMode={() => setNightMode(!nightMode)}
+
+        // מצבי נראות נוכחיים
         showMunicipalities={showMunicipalities}
-        setShowMunicipalities={setShowMunicipalities}
+        showLandings={showLandings}
+        showHistory={showHistory}
         showAliens={showAliens}
-        setShowAliens={setShowAliens}
+        showShelters={showShelters}
+        showWeather={showWeather}
+        nightMode={nightMode}
       />
     </div>
   );

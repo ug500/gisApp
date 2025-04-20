@@ -1,25 +1,43 @@
-.layer-controls {
-  position: absolute !important;
-  top: 70px !important;         /* 👈 Force position below navbar */
-  right: 10px !important;
-  background: white;
-  border-radius: 8px;
-  padding: 10px 15px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
-  font-family: sans-serif;
-  z-index: 1000 !important;
-}
+
 
 
   
-  .layer-controls label {
-    display: block;
-    margin-bottom: 6px;
-    cursor: pointer;
-  }
+.layer-controls {
+  position: absolute !important;
+  top: 70px !important;
+  right: 10px !important;
+  background: transparent;
+  border-radius: 8px;
+  padding: 0;
+  z-index: 1000 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* ✅ ריווח בין כפתורים */
+}
+
+
   
   .layer-controls input[type='checkbox'] {
     margin-right: 6px;
   }
 
+  .layer-button {
+    font-size: 24px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.8);  /* 🖤 שחור שקוף */
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.4); /* זוהר קל */
+    transition: background 0.2s ease;
+  }
+  
+  .layer-button:hover {
+    background: rgba(50, 50, 50, 0.9); /* טיפה בהיר */
+  }
+  
+  .layer-button.active {
+    border: 2px solid rgba(255, 255, 255, 0.8); /* לבן כמעט מלא */
+  }
   
