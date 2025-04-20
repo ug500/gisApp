@@ -62,17 +62,17 @@ html, body, #root {
 
 .top-bar {
   grid-area: topbar;
-  background-color: black;
+
 }
 
 .side-panel-left {
   grid-area: left;
-  background-color: #222;
+
 }
 
 .side-panel-right {
   grid-area: right;
-  background-color: #222;
+
 }
 
 .main-map-container {

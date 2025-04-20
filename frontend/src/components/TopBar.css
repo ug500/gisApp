@@ -1,25 +1,27 @@
+.top-bar-wrapper {
+  position: relative;
+  height: 60px; /* 45px טופ באר + 15px סטריפ */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
 .top-bar {
-  height: 28px;
+  height: 45px;
   background-color: #111;
   color: white;
-  text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 12px;
-  border-bottom: 1px solid #333;
+  z-index: 2;
+  position: relative;
 }
-.active-indicator .dot {
-  height: 8px;
-  width: 8px;
-  background-color: #00f;
-  border-radius: 50%;
-  margin-right: 6px;
-  animation: blink 1s infinite;
-  display: inline-block;
-}
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.2; }
+
+.top-bar-strip {
+  height: 15px;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1;
+  pointer-events: none;
 }

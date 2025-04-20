@@ -1,14 +1,14 @@
-// src/components/TopBar.js
-import React from 'react';
-import './TopBar.css';
+// 📁 src/components/TopBar.js
+import React from "react";
+import "./TopBar.css";
 
 const TopBar = () => {
   return (
-    <div className="top-bar">
-      <div className="active-indicator centered">
-        <span className="dot"></span>
-        <span className="label">ACTIVE</span>
+    <div className="top-bar-wrapper">
+      <div className="top-bar">
+        <span className="dot" /> ACTIVE
       </div>
+      <div className="top-bar-strip" />
     </div>
   );
 };
