@@ -6,7 +6,8 @@ const TopBar = () => {
   return (
     <div className="top-bar-wrapper">
       <div className="top-bar">
-        <span className="dot" /> ACTIVE
+        <span className="dot" />
+        <span className="active-label">ACTIVE</span>
       </div>
       <div className="top-bar-strip" />
     </div>
