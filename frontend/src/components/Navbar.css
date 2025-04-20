@@ -1,33 +1,52 @@
+/* frontend/src/components/Navbar.css */
 .navbar {
-  background-color: black;
+  background-color: #333;
   color: white;
   padding: 10px 20px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  position: relative;
-  z-index: 1100;
+  height: 60px; /* Example height */
+  box-sizing: border-box;
+  flex-shrink: 0; /* Prevent navbar from shrinking */
+  z-index: 10; /* Keep above map but below modal */
 }
 
-.navbar-title {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 20px;
+.navbar-brand {
+  font-size: 1.4em;
   font-weight: bold;
-  white-space: nowrap;
 }
 
-.log-button {
-  background-color: #333;
+.navbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Spacing between controls */
+}
+
+.navbar-user-info {
+  font-size: 0.9em;
+  margin-right: 10px;
+}
+
+.navbar-button {
+  background-color: #555;
   color: white;
   border: none;
-  padding: 6px 12px;
-  cursor: pointer;
+  padding: 8px 15px;
   border-radius: 4px;
-  font-weight: bold;
-  margin-left: auto; /* keep it aligned right */
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s ease;
 }
 
-.log-button:hover {
-  background-color: #555;
+.navbar-button:hover {
+  background-color: #777;
+}
+
+.logout-button {
+  background-color: #dc3545; /* Red for logout */
+}
+
+.logout-button:hover {
+  background-color: #c82333;
 }
