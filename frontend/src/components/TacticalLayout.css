@@ -1,0 +1,41 @@
+.tactical-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+}
+
+.tactical-center {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.map-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
+}
+
+.side-panel-left {
+  z-index: 2;
+  position: relative;
+}
+
+.side-panel-right {
+  z-index: 2;
+  position: relative;
+}
+
+.top-bar {
+  z-index: 3;
+}
+
+.bottom-bar {
+  z-index: 3;
+}

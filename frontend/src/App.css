@@ -45,3 +45,47 @@ html, body, #root {
   border-radius: 6px;
   padding: 4px;
 }
+
+/* 📁 src/App.css */
+.tactical-layout {
+  display: grid;
+  grid-template-columns: 80px 1fr 80px;
+  grid-template-rows: 40px 1fr 40px;
+  grid-template-areas:
+    "topbar topbar topbar"
+    "left main right"
+    "bottombar bottombar bottombar";
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.top-bar {
+  grid-area: topbar;
+  background-color: black;
+}
+
+.side-panel-left {
+  grid-area: left;
+  background-color: #222;
+}
+
+.side-panel-right {
+  grid-area: right;
+  background-color: #222;
+}
+
+.main-map-container {
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+
+.bottom-bar {
+  grid-area: bottombar;
+  background-color: black;
+}
+

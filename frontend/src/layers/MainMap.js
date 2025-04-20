@@ -31,11 +31,8 @@ const MainMap = () => {
   }, []);
 
   return (
-    <div style={{ height: '100%', width: '100%', position: 'relative' }}>
-  
-
+    <div className="main-map-container">
       <LogPanel visible={showLog} data={invasionData} />
-
       <MapContainer center={[31.7683, 35.2137]} zoom={8} style={{ height: '100%', width: '100%' }}>
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {showMunicipalities && municipalities && (
@@ -46,6 +43,7 @@ const MainMap = () => {
       </MapContainer>
     </div>
   );
+  
 };
 
 export default MainMap;
