@@ -1,4 +1,4 @@
-// 📁 src/components/TacticalLayout.js
+// src/components/TacticalLayout.js
 import React, { useState, useEffect, useRef } from "react";
 import SidePanelLeft from "./SidePanelLeft";
 import SidePanelRight from "./SidePanelRight";
@@ -87,7 +87,14 @@ const TacticalLayout = () => {
     <div className="tactical-layout">
       <TopBar />
       <div className="tactical-center">
-        <SidePanelLeft logItems={log} landings={landingCount} aliens={alienCount} />
+        <SidePanelLeft
+          logItems={log}
+          landings={landingCount}
+          aliens={alienCount}
+          paused={paused}
+          setPaused={setPaused}
+          clearLog={() => setLog([])}
+        />
         <SidePanelRight
           showMunicipalities={showMunicipalities}
           setShowMunicipalities={setShowMunicipalities}

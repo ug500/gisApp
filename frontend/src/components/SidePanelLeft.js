@@ -1,10 +1,9 @@
 // src/components/SidePanelLeft.js
-import React, { useState } from "react";
+import React from "react";
 import "./SidePanelLeft.css";
 import "../components/LogPanel.css";
 
-const SidePanelLeft = ({ logItems = [], landings = 0, aliens = 0 }) => {
-  const [paused, setPaused] = useState(false);
+const SidePanelLeft = ({ logItems = [], landings = 0, aliens = 0, paused, setPaused, clearLog }) => {
 
   const handleSave = () => {
     const text = logItems.map(item => `[${item.time}] ${item.id}: ${item.location}`).join('\n');
@@ -15,9 +14,17 @@ const SidePanelLeft = ({ logItems = [], landings = 0, aliens = 0 }) => {
     link.click();
   };
 
-  const handleClear = () => {
-    console.clear(); // פעולה דמיונית, ניתן להחליף ב־setLog([])
-  };
+  const yellowClass = landings >= 1 ? "light yellow blinking" : "light yellow";
+  const orangeClass = landings >= 2 ? "light orange blinking" : "light orange";
+  const redClass = landings >= 3 ? "light red blinking" : "light red";
+
+  const renderButton = (label, onClick) => (
+    <button onClick={onClick}>
+      <span className="transition" />
+      <span className="gradient" />
+      <span className="label">{label}</span>
+    </button>
+  );
 
   return (
     <div className="side-panel-left">
@@ -28,9 +35,9 @@ const SidePanelLeft = ({ logItems = [], landings = 0, aliens = 0 }) => {
           <span className="count">{aliens}</span>
         </div>
         <div className="alert-lights">
-          <div className="light yellow" />
-          <div className="light orange" />
-          <div className="light red" />
+          <div className={redClass} />
+          <div className={orangeClass} />
+          <div className={yellowClass} />
         </div>
       </div>
 
@@ -38,10 +45,10 @@ const SidePanelLeft = ({ logItems = [], landings = 0, aliens = 0 }) => {
       <div className="log-title">INVADERS LOG</div>
       <div className="divider" />
 
-      <div className="log-controls">
-        <button onClick={() => setPaused(!paused)}>{paused ? 'Resume' : 'Pause'}</button>
-        <button onClick={handleClear}>Clear</button>
-        <button className="save-button" onClick={handleSave}>Save Log</button>
+      <div className="left-log-controls">
+        {renderButton(paused ? 'Resume' : 'Pause', () => setPaused(!paused))}
+        {renderButton('Clear', clearLog)}
+        {renderButton('Save Log', handleSave)}
       </div>
 
       <div className="log-area">
