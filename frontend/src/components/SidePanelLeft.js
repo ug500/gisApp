@@ -19,73 +19,105 @@ const SidePanelLeft = ({ logItems = [], landings = 0, aliens = 0, paused, setPau
     try {
       const now = new Date();
   
-      const landingEntry = logItems.find((item) => item.type === 'landing' && item.coordinates);
-      const alienEntries = logItems.filter((item) => item.type === 'alien' && item.coordinates);
+      // 1. שליפת חייזרים חיים מה־API
+      const resAPI = await fetch("https://invasion-api.onrender.com/api/invasion");
+      const dataAPI = await resAPI.json();
+      const liveAliens = dataAPI.features.filter(f => f.properties?.type === 'alien');
+      const activeAlienCodes = new Set(liveAliens.map(f => f.properties?.alienCode));
+      const alienLandingMap = {};
+      liveAliens.forEach(f => {
+        alienLandingMap[f.properties?.alienCode] = f.properties?.landingId;
+      });
   
-      if (!landingEntry || alienEntries.length === 0) {
-        alert("לא ניתן לשמור - נדרשת נחיתה ולפחות חייזר אחד.");
+      // 2. שליפת כל הנחיתות והחייזרים החיים מהלוג
+      const allLandings = logItems.filter(item => item.type === 'landing' && item.coordinates);
+      const allAliens = logItems.filter(item =>
+        item.type === 'alien' &&
+        item.coordinates &&
+        activeAlienCodes.has(item.id)
+      );
+  
+      if (allLandings.length === 0 || allAliens.length === 0) {
+        alert("❌ לא ניתן לשמור - נדרשת לפחות נחיתה אחת ולפחות חייזר אחד חי.");
         return;
       }
   
-      const [lng, lat] = landingEntry.coordinates;
-      const landingName = getMunicipalityName(lng, lat);
+      // 3. מעבר על כל נחיתה והכנה לרישום בנפרד
+      for (const landing of allLandings) {
+        const landingIdFromAPI = dataAPI.features.find(f =>
+          f.properties?.type === 'landing' &&
+          f.geometry?.coordinates[0] === landing.coordinates[0] &&
+          f.geometry?.coordinates[1] === landing.coordinates[1]
+        )?.properties?.id;
   
-      const invadedMap = {};
-      const alienPaths = alienEntries.map((entry) => {
-        const [ax, ay] = entry.coordinates;
-        const polyName = getMunicipalityName(ax, ay);
+        if (!landingIdFromAPI) continue;
   
-        if (!invadedMap[polyName]) {
-          invadedMap[polyName] = {
-            name: polyName,
-            polygonId: polyName,
-            count: 0,
-            invadedAt: now.toISOString()
+        const landingAliens = allAliens.filter(a =>
+          alienLandingMap[a.id] === landingIdFromAPI
+        );
+        if (landingAliens.length === 0) continue;
+  
+        const [lng, lat] = landing.coordinates;
+        const landingName = getMunicipalityName(lng, lat);
+  
+        const invadedMap = {};
+        const alienPaths = landingAliens.map((entry) => {
+          const [ax, ay] = entry.coordinates;
+          const polyName = getMunicipalityName(ax, ay);
+  
+          if (!invadedMap[polyName]) {
+            invadedMap[polyName] = {
+              name: polyName,
+              polygonId: polyName,
+              count: 0,
+              invadedAt: now.toISOString()
+            };
+          }
+          invadedMap[polyName].count++;
+  
+          return {
+            alienCode: entry.id,
+            path: [
+              { coordinates: [lng, lat], enteredAt: now },
+              { coordinates: [ax, ay], enteredAt: now }
+            ]
           };
-        }
-        invadedMap[polyName].count++;
+        });
   
-        return {
-          alienCode: entry.id,
-          path: [{
+        const payload = {
+          landing: {
+            polygonId: landingName,
+            name: landingName,
             coordinates: [lng, lat],
-            enteredAt: now
-          }, {
-            coordinates: [ax, ay],
-            enteredAt: now
-          }]
+            timestamp: now
+          },
+          invadedPolygons: Object.values(invadedMap),
+          alienPaths
         };
-      });
   
-      const payload = {
-        landing: {
-          polygonId: landingName,
-          name: landingName,
-          coordinates: [lng, lat],
-          timestamp: now
-        },
-        invadedPolygons: Object.values(invadedMap),
-        alienPaths
-      };
+        const res = await fetch('http://localhost:5000/api/history', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
   
-      const res = await fetch('http://localhost:5000/api/history', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-  
-      if (res.ok) {
-        alert('✅ הפלישה נשמרה למסד');
-      } else {
-        const error = await res.json();
-        console.error(error);
-        alert('❌ שגיאה בשמירה למסד');
+        if (res.ok) {
+          console.log(`✅ הפלישה של ${landingName} נשמרה למסד`);
+        } else {
+          const error = await res.json();
+          console.error(error);
+          alert(`❌ שגיאה בשמירה של ${landingName}`);
+        }
       }
+  
+      alert("✅ כל הפלישות נשמרו למסד");
     } catch (err) {
       console.error(err);
       alert('❌ שגיאה כללית בשמירה');
     }
   };
+  
+  
 
   const yellowClass = landings >= 1 ? "light yellow blinking" : "light yellow";
   const orangeClass = landings >= 2 ? "light orange blinking" : "light orange";

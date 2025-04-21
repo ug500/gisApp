@@ -1,9 +1,9 @@
-
 import React from 'react';
 import './LogPanel.css';
 
 const LogPanel = ({ visible = false, data = [] }) => {
   if (!visible) return null;
+
   return (
     <div className="log-panel">
       {data.length === 0 ? (
@@ -11,7 +11,13 @@ const LogPanel = ({ visible = false, data = [] }) => {
       ) : (
         data.map((item, index) => (
           <div key={index} className="log-line">
-            {item.properties?.name || 'Unknown activity'}
+            <span>[{item.time}] </span>
+            <strong>{item.id}</strong>{' '}
+            {item.type === 'alien' ? (
+              <span dangerouslySetInnerHTML={{ __html: item.location }} />
+            ) : (
+              <span>{item.location}</span>
+            )}
           </div>
         ))
       )}
