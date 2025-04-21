@@ -31,23 +31,6 @@
   padding-top: 5px; /* ⬅ מרווח קטן מהחלק העליון */
 }
 
-
-/* מונה */
-.status-counts {
-  display: flex;
-  gap: 16px;
-  font-size: 18px;
-  font-weight: bold;
-  color: white;
-  margin-top: 0px; /* ⬅ או 0px אם אתה רוצה שיהיה צמוד לגמרי */
-}
-
-
-.status-counts .count {
-  font-size: 22px;
-  color: #0ff;
-}
-
 /* חיפוש */
 .search-input {
   position: absolute;

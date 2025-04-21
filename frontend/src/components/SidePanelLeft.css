@@ -1,7 +1,7 @@
 .side-panel-left {
   width: 100%;
-  max-width: 400px;
-  height: 100vh; /* ✅ תופס את כל הגובה */
+  max-width: 350px;
+  height: 100vh;
   background-color: rgba(0, 0, 0, 0.8);
   color: white;
   display: flex;
@@ -10,13 +10,38 @@
   border-right: 1px solid #333;
   z-index: 2;
   position: relative;
-  overflow: hidden; /* ✅ מונע גלישה של הלוג אל מחוץ לגובה */
+  overflow: hidden;
+}
+
+.status-alert-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px 0;
+}
+
+.status-counts {
+  order: 2;
+  display: flex;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  align-items: center;
+  transform: translateX(-70px);
+}
+
+.status-counts .count {
+  font-size: 30px;
+  color: #0ff;
 }
 
 .alert-lights {
+  order: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   margin-bottom: 10px;
 }
@@ -61,7 +86,7 @@
   font-family: monospace;
   background-color: rgba(255, 255, 255, 0.03);
   border-top: 1px solid rgba(255, 255, 255, 0.2);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15); /* ✅ גבול תחתון עדין */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   min-height: 0;
 }
 

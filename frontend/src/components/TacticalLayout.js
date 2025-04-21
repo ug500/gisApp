@@ -18,7 +18,6 @@ const getMunicipalityName = (lng, lat) => {
 };
 
 const TacticalLayout = () => {
-  // ✅ ניהול מצבים לכל שכבה
   const [showMunicipalities, setShowMunicipalities] = useState(true);
   const [showLandings, setShowLandings] = useState(true);
   const [showHistory, setShowHistory] = useState(false);
@@ -27,7 +26,6 @@ const TacticalLayout = () => {
   const [showWeather, setShowWeather] = useState(false);
   const [nightMode, setNightMode] = useState(false);
 
-  // ✅ לוג מתעדכן
   const [log, setLog] = useState([]);
   const [paused, setPaused] = useState(false);
   const panelRef = useRef();
@@ -82,11 +80,14 @@ const TacticalLayout = () => {
     });
   }, [invasionData, paused]);
 
+  const landingCount = invasionData.filter(f => f.properties?.type === 'landing').length;
+  const alienCount = invasionData.filter(f => f.properties?.type === 'alien').length;
+
   return (
     <div className="tactical-layout">
       <TopBar />
       <div className="tactical-center">
-        <SidePanelLeft logItems={log} />
+        <SidePanelLeft logItems={log} landings={landingCount} aliens={alienCount} />
         <SidePanelRight
           showMunicipalities={showMunicipalities}
           setShowMunicipalities={setShowMunicipalities}
