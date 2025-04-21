@@ -21,6 +21,9 @@
 - OSRM Routing API
 - Turf.js (אם נשתמש בהמשך)
 - GeoJSON
+- JWT Encrypted
+-Implementing the bcrypt key derivation function, used for password hashing  
+
 
 ---
 
