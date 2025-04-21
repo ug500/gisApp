@@ -2,16 +2,89 @@
 import React from "react";
 import "./SidePanelLeft.css";
 import "../components/LogPanel.css";
+import localMunicipalities from '../municipalities.json';
+import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+import { point } from '@turf/helpers';
+import axios from 'axios';
+
+const getMunicipalityName = (lng, lat) => {
+  const pt = point([lng, lat]);
+  const match = localMunicipalities.features.find(f => booleanPointInPolygon(pt, f));
+  return match?.properties?.MUN_HEB || 'Unknown Area';
+};
 
 const SidePanelLeft = ({ logItems = [], landings = 0, aliens = 0, paused, setPaused, clearLog }) => {
 
-  const handleSave = () => {
-    const text = logItems.map(item => `[${item.time}] ${item.id}: ${item.location}`).join('\n');
-    const blob = new Blob([text], { type: 'text/plain' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'log.txt';
-    link.click();
+  const handleSave = async () => {
+    try {
+      const now = new Date();
+  
+      const landingEntry = logItems.find((item) => item.type === 'landing' && item.coordinates);
+      const alienEntries = logItems.filter((item) => item.type === 'alien' && item.coordinates);
+  
+      if (!landingEntry || alienEntries.length === 0) {
+        alert("לא ניתן לשמור - נדרשת נחיתה ולפחות חייזר אחד.");
+        return;
+      }
+  
+      const [lng, lat] = landingEntry.coordinates;
+      const landingName = getMunicipalityName(lng, lat);
+  
+      const invadedMap = {};
+      const alienPaths = alienEntries.map((entry) => {
+        const [ax, ay] = entry.coordinates;
+        const polyName = getMunicipalityName(ax, ay);
+  
+        if (!invadedMap[polyName]) {
+          invadedMap[polyName] = {
+            name: polyName,
+            polygonId: polyName,
+            count: 0,
+            invadedAt: now.toISOString()
+          };
+        }
+        invadedMap[polyName].count++;
+  
+        return {
+          alienCode: entry.id,
+          path: [{
+            coordinates: [lng, lat],
+            enteredAt: now
+          }, {
+            coordinates: [ax, ay],
+            enteredAt: now
+          }]
+        };
+      });
+  
+      const payload = {
+        landing: {
+          polygonId: landingName,
+          name: landingName,
+          coordinates: [lng, lat],
+          timestamp: now
+        },
+        invadedPolygons: Object.values(invadedMap),
+        alienPaths
+      };
+  
+      const res = await fetch('http://localhost:5000/api/history', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+  
+      if (res.ok) {
+        alert('✅ הפלישה נשמרה למסד');
+      } else {
+        const error = await res.json();
+        console.error(error);
+        alert('❌ שגיאה בשמירה למסד');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('❌ שגיאה כללית בשמירה');
+    }
   };
 
   const yellowClass = landings >= 1 ? "light yellow blinking" : "light yellow";
@@ -52,27 +125,25 @@ const SidePanelLeft = ({ logItems = [], landings = 0, aliens = 0, paused, setPau
       </div>
 
       <div className="log-area">
-        {logItems.length === 0 ? (
-          <div className="log-entry">No recent activity.</div>
-        ) : (
-          logItems.map((entry, index) => (
-            <React.Fragment key={index}>
-              {entry.type === 'landing' && (
-                <div className="log-landing-banner">
-                  🚨 Landing Detected: <strong>{entry.id}</strong> — <span dangerouslySetInnerHTML={{ __html: entry.location }} />
-                </div>
-              )}
-              <div className={`log-entry ${entry.type}`}>
-                <span className="log-time">[{entry.time}]</span>{" "}
-                <span style={{ fontSize: "18px", marginRight: "4px" }}>
-                  {entry.type === "landing" ? "🛸" : "👽"}
-                </span>{" "}
-                <strong>{entry.id}</strong>{" "}
-                <span dangerouslySetInnerHTML={{ __html: entry.location }} />
-              </div>
-            </React.Fragment>
-          ))
-        )}
+        {logItems
+          .filter(item => item.type === 'landing')
+          .map((entry, index) => (
+            <div key={`landing-${index}`} className="log-entry landing">
+              <span className="log-time">[{entry.time}]</span>{" "}
+              🛸 <strong>{entry.id}</strong>{" "}
+              <span dangerouslySetInnerHTML={{ __html: entry.location }} />
+            </div>
+        ))}
+
+        {logItems
+          .filter(item => item.type !== 'landing')
+          .map((entry, index) => (
+            <div key={`entry-${index}`} className={`log-entry ${entry.type}`}>
+              <span className="log-time">[{entry.time}]</span>{" "}
+              {entry.type === "alien" ? "👽" : "❓"} <strong>{entry.id}</strong>{" "}
+              <span dangerouslySetInnerHTML={{ __html: entry.location }} />
+            </div>
+        ))}
       </div>
     </div>
   );

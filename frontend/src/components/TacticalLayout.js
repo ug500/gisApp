@@ -48,6 +48,19 @@ const TacticalLayout = () => {
   useEffect(() => {
     if (!invasionData || paused) return;
 
+    const activeKeys = new Set(
+      invasionData.map((f) => {
+        const type = f.properties?.type;
+        const id = type === 'landing' ? f.properties?.landingCode : f.properties?.alienCode;
+        const coords = f.geometry?.coordinates || [];
+        const hebrew = getMunicipalityName(coords[0], coords[1]);
+        const location = type === 'landing'
+          ? f.properties?.locationName || 'Unknown'
+          : `<span class="coordinates-highlight">${coords.join(', ')}</span> in <span class="hebrew-name">${hebrew}</span>`;
+        return id + location + type;
+      })
+    );
+
     const newEntries = invasionData.map((f) => {
       const type = f.properties?.type;
       const id = type === 'landing' ? f.properties?.landingCode : f.properties?.alienCode;
@@ -63,19 +76,20 @@ const TacticalLayout = () => {
         id: id || '?',
         location,
         type,
-        time: timestamp
+        time: timestamp,
+        coordinates: coords // ✅ נוספה תמיכה מלאה לקואורדינטות
       };
     });
 
     setLog((prev) => {
-      const combined = [...prev, ...newEntries];
-      const seen = new Set();
-      const deduped = combined.filter((entry) => {
+      const deduped = [...prev, ...newEntries].filter((entry, i, arr) => {
         const key = entry.id + entry.location + entry.type;
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
+        return arr.findIndex(e => e.id + e.location + e.type === key) === i;
+      }).filter(entry => {
+        const key = entry.id + entry.location + entry.type;
+        return activeKeys.has(key);
       });
+
       return deduped.slice(-100);
     });
   }, [invasionData, paused]);

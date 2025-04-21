@@ -105,11 +105,11 @@
 }
 
 .left-log-controls button {
-  font-size: 14px;
+  font-size: 12px;
   padding: 0.5em 0.7em;
   font-weight: 500;
-  background: #1f2937;
-  color: white;
+  background: #2a6145;
+  color: rgb(146, 196, 178);
   border: none;
   position: relative;
   overflow: hidden;
@@ -196,4 +196,14 @@
 
 .log-line {
   margin-bottom: 4px;
+}
+
+.log-entry.landing {
+  background-color: rgba(0, 80, 120, 0.3);
+  font-size: 13px;
+  font-weight: bold;
+  padding: 6px 8px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  border: 1px solid rgba(0, 255, 255, 0.2);
 }
