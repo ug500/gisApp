@@ -103,11 +103,12 @@ const TacticalLayout = () => {
         .then(res => res.json())
         .then(data => {
           setHistoryData(data || []);
-          setVisibleHistoricalIds(data.map(entry => entry._id));
+          setVisibleHistoricalIds([]); // ⬅️ כאן נוסיף
         })
         .catch(err => console.error('Error loading history:', err));
     }
   }, [showHistory]);
+  
 
   const handleToggleHistorical = (id, isVisible) => {
     setVisibleHistoricalIds(prev =>
