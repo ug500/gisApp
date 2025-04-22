@@ -28,9 +28,13 @@
 ---
 
 ## תוספות 
-Adding a JWT Encrypted User Login Layer to the System Log in as an Administrator or a Regular User or    Register as a New User
+Adding a JWT Encrypted User Login Layer to the System Log in as an Administrator or a Regular User or Register as a New User
 - Handle user authentication (login/register) using JWT and bcrypt.
 - Store/retrieve Users data using MongoDB, Collection users MONGODB_URI.
+- Add middleware allows you to easily configure which API routes require the user to be logged in. Any path configured to use this middleware will be protected, and the code that handles the path can
+trust that req.user contains the authenticated user information.
+- The new validation rules and logic In Frontend.
+- The new validation rules and logic using express-validator In Backend.
 
 ## 🚀 הפעלה מקומית
 
@@ -64,6 +68,9 @@ Navigate to your backend directory in the terminal and run:
 bash
 npm install
 npm install bcryptjs jsonwebtoken
+
+# Install express-validator
+npm install express-validator
 
 Run the Server
 bash
