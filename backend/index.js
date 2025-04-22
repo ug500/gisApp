@@ -80,20 +80,28 @@ mongoose.connect(process.env.MONGODB_URI, {
 // --- Admin User Seeding Function ---
 async function seedAdminUser() {
   try {
-    const adminUsername = 'admin';
+    // Use environment variables for username and password
+    const adminUsername = process.env.ADMIN_USERNAME;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+
+    // Basic check to ensure variables are loaded
+    if (!adminUsername || !adminPassword) {
+      console.warn('⚠️ Admin username or password not found in .env file. Skipping admin seed.');
+      return; // Exit the function if credentials aren't set
+    }
+
     const adminExists = await User.findOne({ username: adminUsername });
 
     if (!adminExists) {
       console.log(`🔧 Admin user '${adminUsername}' not found. Creating...`);
-      const adminPassword = 'admin123'; // Use a more secure password in reality!
 
       // No need to hash here, the pre-save hook in User.js handles it
       const adminUser = new User({
         firstName: 'Admin',
         lastName: 'User',
         email: 'admin@example.com', // Use a valid email format
-        username: adminUsername,
-        password: adminPassword, // Pass plain password
+        username: adminUsername, // Use variable
+        password: adminPassword, // Use variable (plain password)
         isAdmin: true
       });
 
@@ -107,3 +115,35 @@ async function seedAdminUser() {
     // Don't necessarily exit, the app might still function
   }
 }
+
+
+// // --- Admin User Seeding Function ---
+// async function seedAdminUser() {
+//   try {
+//     const adminUsername = 'admin';
+//     const adminExists = await User.findOne({ username: adminUsername });
+
+//     if (!adminExists) {
+//       console.log(`🔧 Admin user '${adminUsername}' not found. Creating...`);
+//       const adminPassword = 'admin123'; // Use a more secure password in reality!
+
+//       // No need to hash here, the pre-save hook in User.js handles it
+//       const adminUser = new User({
+//         firstName: 'Admin',
+//         lastName: 'User',
+//         email: 'admin@example.com', // Use a valid email format
+//         username: adminUsername,
+//         password: adminPassword, // Pass plain password
+//         isAdmin: true
+//       });
+
+//       await adminUser.save();
+//       console.log(`✅ Admin user '${adminUsername}' created successfully.`);
+//     } else {
+//       console.log(`👍 Admin user '${adminUsername}' already exists.`);
+//     }
+//   } catch (error) {
+//     console.error('❌ Error seeding admin user:', error);
+//     // Don't necessarily exit, the app might still function
+//   }
+// }

@@ -22,13 +22,15 @@
 - Turf.js (אם נשתמש בהמשך)
 - GeoJSON
 - JWT Encrypted
--Implementing the bcrypt key derivation function, used for password hashing  
+- Implementing the bcrypt key derivation function, used for password hashing  
 
 
 ---
 
 ## תוספות 
 Adding a JWT Encrypted User Login Layer to the System Log in as an Administrator or a Regular User or    Register as a New User
+- Handle user authentication (login/register) using JWT and bcrypt.
+- Store/retrieve Users data using MongoDB, Collection users.
 
 ## 🚀 הפעלה מקומית
 
