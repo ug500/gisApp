@@ -160,7 +160,6 @@ const TacticalLayout = () => {
         </div>
       </div>
 
-      {/* ✅ הוספה תקינה של פרופס ל־HistoricalPanel */}
       {showHistory && (
         <HistoricalPanel
           historyData={historyData}
@@ -169,7 +168,7 @@ const TacticalLayout = () => {
         />
       )}
 
-      <BottomBar />
+      <BottomBar logItems={log} />
     </div>
   );
 };
