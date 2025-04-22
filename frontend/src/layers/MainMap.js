@@ -13,6 +13,7 @@ export default function MainMap({
   showMunicipalities,
   showLandings,
   showHistory,
+  visibleHistoricalIds
 }) {
   const [municipalities, setMunicipalities] = useState(null);
   const [invasionData, setInvasionData] = useState([]);
@@ -58,7 +59,9 @@ export default function MainMap({
         <HistoricalInvasionLayer
           visible={true}
           municipalities={municipalities}
+          visibleIds={visibleHistoricalIds} // ⬅️ משודר לשכבת היסטוריה
         />
+        
       )}
     </MapContainer>
   );

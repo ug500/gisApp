@@ -16,7 +16,7 @@ const historicalAlienIcon = (code) =>
     iconSize: [30, 30],
   });
 
-export default function HistoricalInvasionLayer({ visible, municipalities }) {
+export default function HistoricalInvasionLayer({ visible, municipalities, visibleIds }) {
   const [history, setHistory] = useState([]);
   const map = useMap();
 
@@ -33,21 +33,16 @@ export default function HistoricalInvasionLayer({ visible, municipalities }) {
 
   if (!visible || !Array.isArray(history) || !municipalities) return null;
 
-  const findPolygonByName = (name) => {
-    return municipalities.features.find((feature) => {
-      const polyName =
-        feature.properties?.MUN_HEB ||
-        feature.properties?.MUN_ENG ||
-        feature.properties?.name;
-      return polyName === name;
-    });
-  };
+  const filteredHistory = history.filter((inv) =>
+    (Array.isArray(visibleIds) ? visibleIds : []).includes(inv._id)
+  );
+  
+  
 
   return (
     <>
-      {history.map((inv, idx) => (
-        <React.Fragment key={idx}>
-          {/* 🛸 Landing Marker */}
+      {filteredHistory.map((inv, idx) => (
+        <React.Fragment key={inv._id}>
           {inv.landing?.coordinates && (
             <Marker
               position={[
@@ -58,7 +53,6 @@ export default function HistoricalInvasionLayer({ visible, municipalities }) {
             />
           )}
 
-          {/* 🔴 Invaded + Landing Polygons */}
           {municipalities.features.map((poly, i) => {
             const polyName =
               poly.properties?.MUN_HEB ||
@@ -81,7 +75,7 @@ export default function HistoricalInvasionLayer({ visible, municipalities }) {
 
             return (
               <Polygon
-                key={`poly-${idx}-${i}`}
+                key={`poly-${inv._id}-${i}`}
                 positions={
                   isMultiPolygon
                     ? coordinates.map((poly) =>
@@ -99,21 +93,15 @@ export default function HistoricalInvasionLayer({ visible, municipalities }) {
             );
           })}
 
-          {/* 👣 Alien Paths and Icons */}
           {(inv.alienPaths || []).map((alien, i) => {
             const positions = alien.path.map((step) => [
               step.coordinates[1],
               step.coordinates[0],
             ]);
             const last = positions[positions.length - 1];
-            alien.path.forEach((step, i) => {
-                if (!step.coordinates || step.coordinates.length !== 2) {
-                  console.warn(`❗ Alien ${alien.alienCode} step ${i} missing coordinates`, step);
-                }
-              });
-              
+
             return (
-              <React.Fragment key={`alien-${i}`}>
+              <React.Fragment key={`alien-${inv._id}-${i}`}>
                 <Polyline
                   positions={positions}
                   pathOptions={{

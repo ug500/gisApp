@@ -8,6 +8,7 @@ import MainMap from "../layers/MainMap";
 import localMunicipalities from "../municipalities.json";
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import { point } from '@turf/helpers';
+import HistoricalPanel from './HistoricalPanel';
 import "../App.css";
 import "./TacticalLayout.css";
 
@@ -31,6 +32,8 @@ const TacticalLayout = () => {
   const panelRef = useRef();
 
   const [invasionData, setInvasionData] = useState([]);
+  const [visibleHistoricalIds, setVisibleHistoricalIds] = useState([]);
+  const [historyData, setHistoryData] = useState([]);
 
   useEffect(() => {
     const loadInvasion = () => {
@@ -77,7 +80,7 @@ const TacticalLayout = () => {
         location,
         type,
         time: timestamp,
-        coordinates: coords // ✅ נוספה תמיכה מלאה לקואורדינטות
+        coordinates: coords
       };
     });
 
@@ -93,6 +96,24 @@ const TacticalLayout = () => {
       return deduped.slice(-100);
     });
   }, [invasionData, paused]);
+
+  useEffect(() => {
+    if (showHistory) {
+      fetch('http://localhost:5000/api/history')
+        .then(res => res.json())
+        .then(data => {
+          setHistoryData(data || []);
+          setVisibleHistoricalIds(data.map(entry => entry._id));
+        })
+        .catch(err => console.error('Error loading history:', err));
+    }
+  }, [showHistory]);
+
+  const handleToggleHistorical = (id, isVisible) => {
+    setVisibleHistoricalIds(prev =>
+      isVisible ? [...prev, id] : prev.filter(x => x !== id)
+    );
+  };
 
   const landingCount = invasionData.filter(f => f.properties?.type === 'landing').length;
   const alienCount = invasionData.filter(f => f.properties?.type === 'alien').length;
@@ -134,9 +155,20 @@ const TacticalLayout = () => {
             showShelters={showShelters}
             showWeather={showWeather}
             nightMode={nightMode}
+            visibleHistoricalIds={visibleHistoricalIds}
           />
         </div>
       </div>
+
+      {/* ✅ הוספה תקינה של פרופס ל־HistoricalPanel */}
+      {showHistory && (
+        <HistoricalPanel
+          historyData={historyData}
+          visibleIds={visibleHistoricalIds}
+          onToggle={handleToggleHistorical}
+        />
+      )}
+
       <BottomBar />
     </div>
   );
