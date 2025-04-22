@@ -30,7 +30,7 @@
 ## תוספות 
 Adding a JWT Encrypted User Login Layer to the System Log in as an Administrator or a Regular User or    Register as a New User
 - Handle user authentication (login/register) using JWT and bcrypt.
-- Store/retrieve Users data using MongoDB, Collection users.
+- Store/retrieve Users data using MongoDB, Collection users MONGODB_URI.
 
 ## 🚀 הפעלה מקומית
 
@@ -46,9 +46,18 @@ cd backend
 Update .env file:
 Make sure you have MONGODB_URI and add JWT_SECRET:
 dotenv
-MONGODB_URI=your_mongodb_connection_string_here/Invasion
-JWT_SECRET=replace_this_with_a_very_long_random_secure_string
+
+
+# .env file
 PORT=5000
+MONGODB_URI=your_mongodb_connection_string_here/Invasion
+
+JWT_SECRET=Your Secret-Key Here 
+
+# Add these lines for admin credentials
+ADMIN_USERNAME=Your Admin Username Here
+ADMIN_PASSWORD=Your Admin Password Here
+
 
 Install Dependencies:
 Navigate to your backend directory in the terminal and run:
