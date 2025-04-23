@@ -8,6 +8,7 @@ import MainMap from "../layers/MainMap";
 import HistoricalPanel from "./HistoricalPanel";
 import LayerToggle from "../layers/LayerToggle";
 import NearbySheltersControl from "../layers/NearbySheltersControl";
+import AlienStatsLayer from '../layers/AlienStatsLayer';
 
 import localMunicipalities from "../municipalities.json";
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
@@ -16,11 +17,20 @@ import { point } from '@turf/helpers';
 import "../App.css";
 import "./TacticalLayout.css";
 
-const getMunicipalityName = (lng, lat) => {
-  const pt = point([lng, lat]);
-  const match = localMunicipalities.features.find(f => booleanPointInPolygon(pt, f));
-  return match?.properties?.MUN_HEB || 'Unknown Area';
-};
+// ✅ Alien location detection and grouping
+function getInvadedStats(aliens) {
+  const map = {};
+  aliens.forEach(alien => {
+    const coords = alien.geometry?.coordinates;
+    if (!coords || coords.length !== 2) return;
+
+    const pt = point(coords);
+    const match = localMunicipalities.features.find(f => booleanPointInPolygon(pt, f));
+    const polygonName = match?.properties?.MUN_HEB || 'ללא שם';
+    map[polygonName] = (map[polygonName] || 0) + 1;
+  });
+  return Object.entries(map).map(([polygonName, count]) => ({ polygonName, count }));
+}
 
 const TacticalLayout = () => {
   const [showMunicipalities, setShowMunicipalities] = useState(true);
@@ -33,6 +43,8 @@ const TacticalLayout = () => {
   const [nightMode, setNightMode] = useState(false);
   const [radius, setRadius] = useState(500);
   const [latestLandingCoords, setLatestLandingCoords] = useState(null);
+  const [stopBlinking, setStopBlinking] = useState(false);
+  const [showAlienStatsLayer, setShowAlienStatsLayer] = useState(false);
 
   const [log, setLog] = useState([]);
   const [paused, setPaused] = useState(false);
@@ -51,38 +63,24 @@ const TacticalLayout = () => {
 
     fetch(url)
       .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) {
-          setNearbyShelters(data);
-        } else {
-          console.error('Unexpected response format:', data);
-          setNearbyShelters([]);
-        }
-      })
-      .catch(err => {
-        console.error('Error fetching nearby shelters:', err);
-        setNearbyShelters([]);
-      });
+      .then(data => setNearbyShelters(Array.isArray(data) ? data : []))
+      .catch(() => setNearbyShelters([]));
   }, [showNearbyShelters, latestLandingCoords, radius]);
 
   useEffect(() => {
     const loadInvasion = () => {
       fetch('https://invasion-api.onrender.com/api/invasion')
-        .then((res) => res.json())
-        .then((data) => setInvasionData(data.features || []))
-        .catch((err) => console.error('Failed to load invasion data', err));
+        .then(res => res.json())
+        .then(data => setInvasionData(data.features || []))
+        .catch(err => console.error('Failed to load invasion data', err));
     };
-
     loadInvasion();
     const interval = setInterval(loadInvasion, 1000);
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
-    const latestLanding = [...invasionData]
-      .reverse()
-      .find(f => f.properties?.type === 'landing');
-
+    const latestLanding = [...invasionData].reverse().find(f => f.properties?.type === 'landing');
     if (latestLanding?.geometry?.coordinates) {
       setLatestLandingCoords([
         latestLanding.geometry.coordinates[1],
@@ -94,40 +92,36 @@ const TacticalLayout = () => {
   useEffect(() => {
     if (!invasionData || paused) return;
 
-    const activeKeys = new Set(
-      invasionData.map((f) => {
-        const type = f.properties?.type;
-        const id = type === 'landing' ? f.properties?.landingCode : f.properties?.alienCode;
-        const coords = f.geometry?.coordinates || [];
-        const hebrew = getMunicipalityName(coords[0], coords[1]);
-        const location = type === 'landing'
-          ? f.properties?.locationName || 'Unknown'
-          : `<span class="coordinates-highlight">${coords.join(', ')}</span> in <span class="hebrew-name">${hebrew}</span>`;
-        return id + location + type;
-      })
-    );
+    const getMunicipalityName = (lng, lat) => {
+      const pt = point([lng, lat]);
+      const match = localMunicipalities.features.find(f => booleanPointInPolygon(pt, f));
+      return match?.properties?.MUN_HEB || 'Unknown Area';
+    };
 
-    const newEntries = invasionData.map((f) => {
+    const activeKeys = new Set(invasionData.map(f => {
       const type = f.properties?.type;
       const id = type === 'landing' ? f.properties?.landingCode : f.properties?.alienCode;
       const coords = f.geometry?.coordinates || [];
       const hebrew = getMunicipalityName(coords[0], coords[1]);
-
       const location = type === 'landing'
         ? f.properties?.locationName || 'Unknown'
-        : `<span class="coordinates-highlight">${coords.join(', ')}</span> in <span class="hebrew-name">${hebrew}</span>`;
+        : `<span class="coordinates-highlight">${coords.join(', ')}</span> ב-<span class="hebrew-name">${hebrew}</span>`;
+      return id + location + type;
+    }));
 
+    const newEntries = invasionData.map(f => {
+      const type = f.properties?.type;
+      const id = type === 'landing' ? f.properties?.landingCode : f.properties?.alienCode;
+      const coords = f.geometry?.coordinates || [];
+      const hebrew = getMunicipalityName(coords[0], coords[1]);
+      const location = type === 'landing'
+        ? f.properties?.locationName || 'Unknown'
+        : `<span class="coordinates-highlight">${coords.join(', ')}</span> ב-<span class="hebrew-name">${hebrew}</span>`;
       const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      return {
-        id: id || '?',
-        location,
-        type,
-        time: timestamp,
-        coordinates: coords
-      };
+      return { id, location, type, time: timestamp, coordinates: coords };
     });
 
-    setLog((prev) => {
+    setLog(prev => {
       const deduped = [...prev, ...newEntries].filter((entry, i, arr) => {
         const key = entry.id + entry.location + entry.type;
         return arr.findIndex(e => e.id + e.location + e.type === key) === i;
@@ -135,7 +129,6 @@ const TacticalLayout = () => {
         const key = entry.id + entry.location + entry.type;
         return activeKeys.has(key);
       });
-
       return deduped.slice(-100);
     });
   }, [invasionData, paused]);
@@ -152,14 +145,8 @@ const TacticalLayout = () => {
     }
   }, [showHistory]);
 
-  const handleToggleHistorical = (id, isVisible) => {
-    setVisibleHistoricalIds(prev =>
-      isVisible ? [...prev, id] : prev.filter(x => x !== id)
-    );
-  };
-
-  const landingCount = invasionData.filter(f => f.properties?.type === 'landing').length;
-  const alienCount = invasionData.filter(f => f.properties?.type === 'alien').length;
+  const aliens = invasionData.filter(f => f.properties?.type === 'alien');
+  const landings = invasionData.filter(f => f.properties?.type === 'landing');
 
   return (
     <div className="tactical-layout">
@@ -167,13 +154,12 @@ const TacticalLayout = () => {
       <div className="tactical-center">
         <SidePanelLeft
           logItems={log}
-          landings={landingCount}
-          aliens={alienCount}
+          landings={landings.length}
+          aliens={aliens.length}
           paused={paused}
           setPaused={setPaused}
           clearLog={() => setLog([])}
         />
-
         <SidePanelRight
           showMunicipalities={showMunicipalities}
           setShowMunicipalities={setShowMunicipalities}
@@ -190,7 +176,13 @@ const TacticalLayout = () => {
           nightMode={nightMode}
           setNightMode={setNightMode}
         />
-
+        {showAlienStatsLayer && (
+          <AlienStatsLayer
+            aliens={aliens}
+            landings={landings}
+            invadedStats={getInvadedStats(aliens)}
+          />
+        )}
         <div className="map-container">
           <MainMap
             showMunicipalities={showMunicipalities}
@@ -205,10 +197,10 @@ const TacticalLayout = () => {
             radius={radius}
             setRadius={setRadius}
             latestLandingCoords={latestLandingCoords}
+            stopBlinking={stopBlinking}
           />
         </div>
       </div>
-
       {showNearbyShelters && (
         <NearbySheltersControl
           radius={radius}
@@ -217,17 +209,16 @@ const TacticalLayout = () => {
           shelters={nearbyShelters}
         />
       )}
-
       {showHistory && (
         <HistoricalPanel
           historyData={historyData}
           visibleIds={visibleHistoricalIds}
-          onToggle={handleToggleHistorical}
+          onToggle={id => setVisibleHistoricalIds(prev =>
+            prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+          )}
         />
       )}
-
       <BottomBar logItems={log} />
-
       <LayerToggle
         onToggleMunicipalities={() => setShowMunicipalities(!showMunicipalities)}
         onToggleLandings={() => setShowLandings(!showLandings)}
@@ -255,6 +246,9 @@ const TacticalLayout = () => {
         showNearbyShelters={showNearbyShelters}
         showWeather={showWeather}
         nightMode={nightMode}
+        onToggleBlinking={() => setStopBlinking(prev => !prev)}
+        stopBlinking={stopBlinking}
+        onToggleAlienStats={() => setShowAlienStatsLayer(prev => !prev)}
       />
     </div>
   );

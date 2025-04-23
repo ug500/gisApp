@@ -39,7 +39,7 @@ const HistoricalPanel = ({ historyData, visibleIds, onToggle }) => {
   return (
     <div className="historical-panel">
       <div className="historical-panel-title">
-        LANDING 🕘 HISTORY
+        היסטוריית 🕘 נחיתות
         <select
           onChange={(e) => setFilter(e.target.value)}
           style={{
@@ -76,24 +76,27 @@ const HistoricalPanel = ({ historyData, visibleIds, onToggle }) => {
         )}
       </div>
 
-      {filteredData
-        .slice()
-        .reverse()
-        .map((item) => {
-          const timestamp = new Date(item.landing.timestamp).toLocaleTimeString();
-          return (
-            <label key={item._id}>
-              <input
-                type="checkbox"
-                checked={visibleIds.includes(item._id.toString())}
-                onChange={(e) => onToggle(item._id.toString(), e.target.checked)}
-              />
-              <span>
-                {item.landing.name} <small>({timestamp})</small>
-              </span>
-            </label>
-          );
-        })}
+      <div className="historical-scroll-container">
+  {filteredData
+    .slice()
+    .reverse()
+    .map((item) => {
+      const timestamp = new Date(item.landing.timestamp).toLocaleTimeString();
+      return (
+        <label key={item._id}>
+          <input
+            type="checkbox"
+            checked={visibleIds.includes(item._id.toString())}
+            onChange={(e) => onToggle(item._id.toString(), e.target.checked)}
+          />
+          <span>
+            {item.landing.name} <small>({timestamp})</small>
+          </span>
+        </label>
+      );
+    })}
+</div>
+
     </div>
   );
 };

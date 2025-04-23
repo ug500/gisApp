@@ -1,0 +1,79 @@
+.alien-stats-layer {
+    position: absolute;
+    top: 200px; /* Adjust to match the vertical position of 👾 */
+    right: 50px; /* Pull it slightly away from the button column */
+    width: 220px;
+    background: #1e1e2f;
+    color: #f4f4f5;
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 12px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    box-shadow: 0 0 8px rgba(0, 255, 255, 0.2);
+    z-index: 999;
+  }
+  .panel-right-layer {
+    position: absolute;
+    top: 395px;             /* Or your aligned top value */
+    right: 130px;           /* Align beside side panel */
+    width: 220px;
+    background-color: #1e1e2f;
+    color: #f4f4f5;
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 12px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    box-shadow: 0 0 8px rgba(0, 255, 255, 0.2);
+    z-index: 999;
+  
+    direction: rtl;         /* 👈 Ensures proper right-to-left rendering */
+    text-align: right;      /* 👈 Aligns text to the right edge */
+  }
+  .panel-right-layer ul {
+    list-style: none;       /* 🔥 removes bullets */
+    padding: 0;             /* 🔧 removes left indent */
+    margin: 0;
+  }
+  .panel-right-layer li {
+    margin-bottom: 6px;
+  }
+  .alien-scroll-container {
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 4px;
+    margin-top: 8px;
+    list-style: none;
+  
+    direction: ltr;       /* 👈 forces scrollbar to the right */
+    text-align: right;    /* 👈 keeps Hebrew text aligned properly */
+    unicode-bidi: plaintext;
+  }
+  
+  
+  /* Stylish minimal scrollbar */
+  .alien-scroll-container::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .alien-scroll-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .alien-scroll-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 255, 255, 0.3); /* neon glow */
+    border-radius: 6px;
+  }
+  
+  .alien-scroll-container::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 255, 255, 0.6);
+  }
+  
+  /* Firefox support */
+  .alien-scroll-container {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 255, 255, 0.3) transparent;
+  }
+  

@@ -42,3 +42,10 @@
 .bottom-bar {
   z-index: 3;
 }
+.tactical-layout {
+  position: relative;
+}
+.tactical-center {
+  display: flex;
+  position: relative; /* ✅ This is crucial */
+}

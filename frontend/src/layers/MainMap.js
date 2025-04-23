@@ -25,7 +25,8 @@ export default function MainMap({
   nightMode,
   visibleHistoricalIds,
   radius,
-  latestLandingCoords
+  latestLandingCoords,
+  stopBlinking   
 }) {
   const [municipalities, setMunicipalities] = useState(null);
   const [invasionData, setInvasionData] = useState([]);
@@ -65,6 +66,7 @@ export default function MainMap({
         <MunicipalitiesLayer
           data={municipalities}
           aliens={showLandings ? invasionData : []}
+          stopBlinking={stopBlinking}  // ✅ pass to layer
         />
       )}
 

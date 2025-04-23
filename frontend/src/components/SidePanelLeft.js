@@ -148,6 +148,7 @@ const SidePanelLeft = ({ logItems = [], landings = 0, aliens = 0, paused, setPau
     </button>
   );
 
+
   const landingGroups = logItems
     .filter(item => item.type === 'landing')
     .map(item => {
@@ -195,7 +196,7 @@ const SidePanelLeft = ({ logItems = [], landings = 0, aliens = 0, paused, setPau
 
       <div className="collapse-toggle-wrapper">
         <button className="collapse-button" onClick={() => setCollapsed(!collapsed)}>
-          {collapsed ? '▼ Expand Log' : '▲ Collapse Log'}
+          {collapsed ? '▼' : '▲'}
         </button>
       </div>
 

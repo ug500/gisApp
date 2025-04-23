@@ -7,7 +7,7 @@ const strongColors = [
   '#a65628', '#f781bf', '#999999', '#1b9e77', '#d95f02', '#7570b3'
 ];
 
-export default function MunicipalitiesLayer({ data, aliens = [] }) {
+export default function MunicipalitiesLayer({ data, aliens = [], stopBlinking = false }) {
   const layerRef = useRef();
   const blinkingPolygons = useRef({});
   const landingPolygonId = useRef(null);
@@ -31,7 +31,6 @@ export default function MunicipalitiesLayer({ data, aliens = [] }) {
     };
   }, [data]);
 
-  // Identify and track blinking polygons
   useEffect(() => {
     if (!layerRef.current) return;
 
@@ -68,11 +67,10 @@ export default function MunicipalitiesLayer({ data, aliens = [] }) {
         featureLayer._isBlinking = true;
         active[polygonId] = { layer: featureLayer, type: 'invaded' };
       } else {
-        // Reset non-blinking polygon
         featureLayer._isBlinking = false;
         featureLayer.setStyle({
           fillColor: originalColor,
-          fillOpacity: 0.2,
+          fillOpacity: 0.3,
           color: originalColor,
           weight: 1,
           opacity: 1
@@ -83,56 +81,78 @@ export default function MunicipalitiesLayer({ data, aliens = [] }) {
     blinkingPolygons.current = active;
   }, [aliens, coloredData]);
 
-  // Flicker via rAF
   useEffect(() => {
+    let shouldAnimate = true;
+  
+    if (stopBlinking) {
+      Object.entries(blinkingPolygons.current).forEach(([id, { layer, type }]) => {
+        if (!layer) return;
+        const fillColor = type === 'landing' ? '#8B0000' : '#FF0000';
+        const stroke = type === 'landing' ? '#5a0000' : '#cc0000';
+  
+        layer.setStyle({
+          fillColor,
+          fillOpacity: 0.6,
+          color: stroke,
+          weight: 3,
+          opacity: 1
+        });
+  
+        layer._isBlinking = false;
+      });
+  
+      shouldAnimate = false; // skip animation
+    }
+  
     const animate = (time) => {
+      if (!shouldAnimate) return;
+  
       if (!lastBlinkTime.current) lastBlinkTime.current = time;
-
       const elapsed = time - lastBlinkTime.current;
-
+  
       if (elapsed > BLINK_INTERVAL) {
         blinkState.current = !blinkState.current;
         lastBlinkTime.current = time;
-
+  
         Object.entries(blinkingPolygons.current).forEach(([id, { layer, type }]) => {
           if (!layer || !layer._isBlinking) return;
-
+  
           const fillColor = blinkState.current
             ? (type === 'landing' ? '#8B0000' : '#FF0000')
             : 'transparent';
-
+  
           const stroke = type === 'landing' ? '#5a0000' : '#cc0000';
-
+  
           layer.setStyle({
-            fillColor: fillColor,
-            fillOpacity: blinkState.current ? 0.8 : 0,
+            fillColor,
+            fillOpacity: blinkState.current ? 0.6 : 0,
             color: stroke,
             weight: 3,
             opacity: 1
           });
         });
       }
-
+  
       animationFrameRef.current = requestAnimationFrame(animate);
     };
-
+  
     animationFrameRef.current = requestAnimationFrame(animate);
-
+  
     return () => {
+      shouldAnimate = false; // cancel animation loop
       cancelAnimationFrame(animationFrameRef.current);
     };
-  }, []);
+  }, [stopBlinking]);
+  
 
   return (
     <GeoJSON
       data={coloredData}
       ref={layerRef}
-      // ❌ remove style prop — we're handling all styling manually
       onEachFeature={(feature, layer) => {
         const colorIndex = feature.properties?.colorIndex ?? 0;
         const originalColor = strongColors[colorIndex];
 
-        // Set initial (non-blinking) style manually
         layer.setStyle({
           fillColor: originalColor,
           fillOpacity: 0.2,
