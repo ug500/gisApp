@@ -1,0 +1,1149 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7854589847627,
+          32.064366350945
+        ]
+      },
+      "properties": {
+        "t_sug": "חניון מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7906787049852,
+          32.0573388194099
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.8006341373951,
+          32.0680282095967
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7750303970677,
+          32.0615065947574
+        ]
+      },
+      "properties": {
+        "t_sug": "מקלט בשטח חניון"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7938078004156,
+          32.0574894386349
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7672532818514,
+          32.0788439807992
+        ]
+      },
+      "properties": {
+        "t_sug": "מקלט בשטח חניון"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7578210663095,
+          32.0470565101013
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי במוסדות חינוך"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7521017534322,
+          32.0395522969842
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7571994078671,
+          32.0459521771507
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי במוסדות חינוך"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7966881245242,
+          32.0613790225389
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7662786495392,
+          32.0581827814456
+        ]
+      },
+      "properties": {
+        "t_sug": "חניון מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7720497439183,
+          32.0862731781569
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7986331726604,
+          32.0967562652914
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7888008291562,
+          32.0896789513757
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי במוסדות חינוך"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7878225889959,
+          32.0567062006308
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי במוסדות חינוך"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7532160106022,
+          32.0470271203162
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7825767269029,
+          32.0494400193071
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7822393416367,
+          32.0655914214805
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי במוסדות חינוך"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.8069336021915,
+          32.0487480224379
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי במוסדות חינוך"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7756670076766,
+          32.0633761240353
+        ]
+      },
+      "properties": {
+        "t_sug": "רכבת קלה מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7972540648591,
+          32.0704316438175
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.8341119121423,
+          32.11113930528
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.8375863362453,
+          32.1138734339913
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7808980339907,
+          32.0711982192144
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7797790730106,
+          32.0695133488884
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי במוסדות חינוך"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7713487062607,
+          32.0615047195237
+        ]
+      },
+      "properties": {
+        "t_sug": "חניון מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7731729022287,
+          32.089027934231
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7743380763795,
+          32.0641350170578
+        ]
+      },
+      "properties": {
+        "t_sug": "חניון מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7978119987229,
+          32.0608239182465
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7949928265249,
+          32.0564946991846
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.756994351912,
+          32.0521443082324
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7995860214204,
+          32.0749600336093
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.793461086885,
+          32.0779803157797
+        ]
+      },
+      "properties": {
+        "t_sug": "חניון מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7464110324998,
+          32.0398084860496
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7920061864777,
+          32.0952376548717
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי במוסדות חינוך"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.796326594051,
+          32.0471029442519
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי במוסדות חינוך"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7750439593019,
+          32.0443393234609
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7811734023252,
+          32.0499952745489
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7983759896976,
+          32.1256924913347
+        ]
+      },
+      "properties": {
+        "t_sug": "חניון מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7557580206021,
+          32.0414947896347
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7684675273873,
+          32.0625342911811
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7882303648311,
+          32.0704764863737
+        ]
+      },
+      "properties": {
+        "t_sug": "רכבת קלה מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7821074342673,
+          32.0727116884435
+        ]
+      },
+      "properties": {
+        "t_sug": "חניון מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.8403089763774,
+          32.1214290961259
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7799125347853,
+          32.0426324342642
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7861217637819,
+          32.0657562319753
+        ]
+      },
+      "properties": {
+        "t_sug": "חניון מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7941725224427,
+          32.0474194394277
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7606202292819,
+          32.0408158249858
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7748875995318,
+          32.0898178626058
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7872127128895,
+          32.0705527413393
+        ]
+      },
+      "properties": {
+        "t_sug": "חניון מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7784081042801,
+          32.0576717436438
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7681623086219,
+          32.0669879757941
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.8181304505176,
+          32.1073888352259
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7739615808317,
+          32.0589934925487
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7822276957612,
+          32.0628287980294
+        ]
+      },
+      "properties": {
+        "t_sug": "חניון מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7959947339194,
+          32.0745027190827
+        ]
+      },
+      "properties": {
+        "t_sug": "חניון מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.764685399976,
+          32.0703888782889
+        ]
+      },
+      "properties": {
+        "t_sug": "חניון מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7524451580011,
+          32.0497177642908
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי במוסדות חינוך"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7801204157986,
+          32.0440952260088
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7735394233584,
+          32.0674338729046
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי במוסדות חינוך"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7821396355126,
+          32.0750610415549
+        ]
+      },
+      "properties": {
+        "t_sug": "חניון מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7865780254402,
+          32.0702009898544
+        ]
+      },
+      "properties": {
+        "t_sug": "חניון מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7933665428158,
+          32.0479856706191
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7761686773725,
+          32.0941245153953
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.764362123551,
+          32.0391313221958
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי במוסדות חינוך"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7912941812764,
+          32.0531573301682
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.8080424685654,
+          32.0576327915599
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7796513956678,
+          32.0698290980748
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7484526054795,
+          32.0468526894007
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי במוסדות חינוך"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7811409251599,
+          32.0457329307392
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7739195904231,
+          32.0631502998018
+        ]
+      },
+      "properties": {
+        "t_sug": "חניון מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.8285693909883,
+          32.1095045598297
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי במוסדות חינוך"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7919002702182,
+          32.0632803181991
+        ]
+      },
+      "properties": {
+        "t_sug": "חניון מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.8261569644962,
+          32.1146056992803
+        ]
+      },
+      "properties": {
+        "t_sug": "חניון מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.778935445016,
+          32.0891525658348
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7828561336422,
+          32.0840861000596
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7649110828407,
+          32.0650862952278
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי במוסדות חינוך"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.8164982369457,
+          32.1202157496543
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7562222240954,
+          32.044019114852
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.775524505262,
+          32.0633887431185
+        ]
+      },
+      "properties": {
+        "t_sug": "חניון מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.8025558316726,
+          32.0572331923359
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי במוסדות חינוך"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.771900865521,
+          32.0618972275395
+        ]
+      },
+      "properties": {
+        "t_sug": "חניון מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7975140181897,
+          32.1050471809186
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7974737924327,
+          32.1139808124222
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי במוסדות חינוך"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7786662277251,
+          32.0419910210034
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7941357886156,
+          32.0694561389112
+        ]
+      },
+      "properties": {
+        "t_sug": "חניון מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.7793604178629,
+          32.0625089733745
+        ]
+      },
+      "properties": {
+        "t_sug": "חניון מחסה לציבור"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.8004860520473,
+          32.1101103456172
+        ]
+      },
+      "properties": {
+        "t_sug": "מיקלט ציבורי"
+      }
+    }
+  ]
+}
