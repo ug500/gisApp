@@ -1,31 +1,32 @@
+// index.js
+const dotenv = require('dotenv');
 const express = require('express');
-const mongoose = require('mongoose'); // Import Mongoose
+const mongoose = require('mongoose');
 const cors = require('cors');
 const axios = require('axios');
-const path = require('path'); // Import the 'path' module
-const app = express();
-const municipalityRoutes = require('./routes/municipalityRoutes');
-const dotenv = require('dotenv');
+const path = require('path');
 
 dotenv.config();
 
+const app = express();
 const PORT = process.env.PORT || 5000;
-const PUBLIC_DIR = path.join(__dirname, '../Frontend/public'); // Path to your client-side public folder
+const PUBLIC_DIR = path.join(__dirname, '../Frontend/public');
 
+// Middleware
 app.use(cors());
 app.use(express.json());
-
-// Serve static files from the client-side public folder
 app.use(express.static(PUBLIC_DIR));
 
-
+// Routes
+const municipalityRoutes = require('./routes/municipalityRoutes');
+const shelterRoutes = require('./routes/shelters');
 const invasionHistoryRoutes = require('./routes/invasionHistory');
+
+app.use('/api/municipalities', municipalityRoutes);
+app.use('/api', shelterRoutes);
 app.use('/api/history', invasionHistoryRoutes);
 
-// Use separate route files
-app.use('/api/municipalities', municipalityRoutes);
-
-// OSRM route
+// OSRM proxy route
 app.get('/api/route', async (req, res) => {
   const { fromLat, fromLng, toLat, toLng } = req.query;
   try {
@@ -39,19 +40,19 @@ app.get('/api/route', async (req, res) => {
   }
 });
 
-// Connect to MongoDB and start the server
+// MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {})
   .then(() => {
-    console.log('Connected to MongoDB');
+    console.log('✅ Connected to MongoDB:', mongoose.connection.name);
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+      console.log(`🚀 Server running on port ${PORT}`);
     });
   })
   .catch(err => {
-    console.error('MongoDB connection error:', err);
+    console.error('❌ MongoDB connection error:', err);
   });
 
-// Handle all other requests by serving the index.html from the client-side public folder
+// Catch-all for SPA routing
 app.get('*', (req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
 });

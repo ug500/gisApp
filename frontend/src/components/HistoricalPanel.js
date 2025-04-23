@@ -17,10 +17,29 @@ const HistoricalPanel = ({ historyData, visibleIds, onToggle }) => {
     }
   });
 
+  const allIds = filteredData.map(item => item._id.toString());
+  const allSelected = allIds.every(id => visibleIds.includes(id));
+
+  const selectAll = () => {
+    allIds.forEach(id => {
+      if (!visibleIds.includes(id)) {
+        onToggle(id, true);
+      }
+    });
+  };
+
+  const clearAll = () => {
+    allIds.forEach(id => {
+      if (visibleIds.includes(id)) {
+        onToggle(id, false);
+      }
+    });
+  };
+
   return (
     <div className="historical-panel">
       <div className="historical-panel-title">
-       LANDING 🕘 HISTOTY
+        LANDING 🕘 HISTORY
         <select
           onChange={(e) => setFilter(e.target.value)}
           style={{
@@ -42,6 +61,19 @@ const HistoricalPanel = ({ historyData, visibleIds, onToggle }) => {
           <option value="1D">יום אחרון</option>
           <option value="1W">שבוע אחרון</option>
         </select>
+        {filteredData.length > 0 && (
+          <div style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            marginTop: '4px',
+            gap: '6px',
+            fontSize: '13px',
+            cursor: 'pointer'
+          }}>
+            <span title="Select All" onClick={selectAll}>✅</span>
+            <span title="Clear All" onClick={clearAll}>❌</span>
+          </div>
+        )}
       </div>
 
       {filteredData

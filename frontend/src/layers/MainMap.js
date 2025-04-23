@@ -1,19 +1,31 @@
+// src/layers/MainMap.js
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { MapContainer, TileLayer, Circle } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+
 import MunicipalitiesLayer from './MunicipalitiesLayer';
 import InvasionLayer from './InvasionLayer';
 import HistoricalInvasionLayer from './HistoricalInvasionLayer';
-import localMunicipalities from '../municipalities.json';
+import ShelterLayer from './ShelterLayer';
+import NearbySheltersLayer from './NearbySheltersLayer';
 
-const center = [31.5, 34.8];
-const zoom = 8;
+import localMunicipalities from '../municipalities.json';
+import axios from 'axios';
+
+const center = [32.08, 34.78];
+const zoom = 13;
 
 export default function MainMap({
   showMunicipalities,
   showLandings,
   showHistory,
-  visibleHistoricalIds
+  showAliens,
+  showShelters,
+  showNearbyShelters,
+  nightMode,
+  visibleHistoricalIds,
+  radius,
+  latestLandingCoords
 }) {
   const [municipalities, setMunicipalities] = useState(null);
   const [invasionData, setInvasionData] = useState([]);
@@ -24,16 +36,21 @@ export default function MainMap({
 
   useEffect(() => {
     const loadInvasion = () => {
-      fetch('https://invasion-api.onrender.com/api/invasion')
-        .then((res) => res.json())
-        .then((data) => setInvasionData(data.features || []))
-        .catch((err) => console.error('Failed to load invasion data', err));
+      axios
+        .get('https://invasion-api.onrender.com/api/invasion')
+        .then(res => {
+          const newFeatures = res.data.features;
+          if (JSON.stringify(newFeatures) !== JSON.stringify(invasionData)) {
+            setInvasionData(newFeatures);
+          }
+        })
+        .catch(err => console.error('Failed to load invasion data', err));
     };
 
     loadInvasion();
     const interval = setInterval(loadInvasion, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [invasionData]);
 
   return (
     <MapContainer
@@ -59,9 +76,24 @@ export default function MainMap({
         <HistoricalInvasionLayer
           visible={true}
           municipalities={municipalities}
-          visibleIds={visibleHistoricalIds} // ⬅️ משודר לשכבת היסטוריה
+          visibleIds={visibleHistoricalIds}
         />
-        
+      )}
+
+      {showShelters && <ShelterLayer visible={true} />}
+
+      {showNearbyShelters && latestLandingCoords && (
+        <>
+          <Circle
+            center={latestLandingCoords}
+            radius={radius}
+            pathOptions={{ color: 'yellow', fillOpacity: 0.2 }}
+          />
+          <NearbySheltersLayer
+            landingCoords={latestLandingCoords}
+            radius={radius}
+          />
+        </>
       )}
     </MapContainer>
   );

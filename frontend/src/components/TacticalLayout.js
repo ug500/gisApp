@@ -5,10 +5,14 @@ import SidePanelRight from "./SidePanelRight";
 import TopBar from "./TopBar";
 import BottomBar from "./BottomBar";
 import MainMap from "../layers/MainMap";
+import HistoricalPanel from "./HistoricalPanel";
+import LayerToggle from "../layers/LayerToggle";
+import NearbySheltersControl from "../layers/NearbySheltersControl";
+
 import localMunicipalities from "../municipalities.json";
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import { point } from '@turf/helpers';
-import HistoricalPanel from './HistoricalPanel';
+
 import "../App.css";
 import "./TacticalLayout.css";
 
@@ -24,8 +28,11 @@ const TacticalLayout = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [showAliens, setShowAliens] = useState(true);
   const [showShelters, setShowShelters] = useState(false);
+  const [showNearbyShelters, setShowNearbyShelters] = useState(false);
   const [showWeather, setShowWeather] = useState(false);
   const [nightMode, setNightMode] = useState(false);
+  const [radius, setRadius] = useState(500);
+  const [latestLandingCoords, setLatestLandingCoords] = useState(null);
 
   const [log, setLog] = useState([]);
   const [paused, setPaused] = useState(false);
@@ -34,6 +41,29 @@ const TacticalLayout = () => {
   const [invasionData, setInvasionData] = useState([]);
   const [visibleHistoricalIds, setVisibleHistoricalIds] = useState([]);
   const [historyData, setHistoryData] = useState([]);
+  const [nearbyShelters, setNearbyShelters] = useState([]);
+
+  useEffect(() => {
+    if (!showNearbyShelters || !latestLandingCoords) return;
+
+    const [lat, lng] = latestLandingCoords;
+    const url = `http://localhost:5000/api/shelters-nearby?lat=${lat}&lng=${lng}&radius=${radius}`;
+
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setNearbyShelters(data);
+        } else {
+          console.error('Unexpected response format:', data);
+          setNearbyShelters([]);
+        }
+      })
+      .catch(err => {
+        console.error('Error fetching nearby shelters:', err);
+        setNearbyShelters([]);
+      });
+  }, [showNearbyShelters, latestLandingCoords, radius]);
 
   useEffect(() => {
     const loadInvasion = () => {
@@ -47,6 +77,19 @@ const TacticalLayout = () => {
     const interval = setInterval(loadInvasion, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    const latestLanding = [...invasionData]
+      .reverse()
+      .find(f => f.properties?.type === 'landing');
+
+    if (latestLanding?.geometry?.coordinates) {
+      setLatestLandingCoords([
+        latestLanding.geometry.coordinates[1],
+        latestLanding.geometry.coordinates[0],
+      ]);
+    }
+  }, [invasionData]);
 
   useEffect(() => {
     if (!invasionData || paused) return;
@@ -74,7 +117,7 @@ const TacticalLayout = () => {
         ? f.properties?.locationName || 'Unknown'
         : `<span class="coordinates-highlight">${coords.join(', ')}</span> in <span class="hebrew-name">${hebrew}</span>`;
 
-      const timestamp = new Date().toLocaleTimeString();
+      const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       return {
         id: id || '?',
         location,
@@ -103,12 +146,11 @@ const TacticalLayout = () => {
         .then(res => res.json())
         .then(data => {
           setHistoryData(data || []);
-          setVisibleHistoricalIds([]); // ⬅️ כאן נוסיף
+          setVisibleHistoricalIds([]);
         })
         .catch(err => console.error('Error loading history:', err));
     }
   }, [showHistory]);
-  
 
   const handleToggleHistorical = (id, isVisible) => {
     setVisibleHistoricalIds(prev =>
@@ -131,6 +173,7 @@ const TacticalLayout = () => {
           setPaused={setPaused}
           clearLog={() => setLog([])}
         />
+
         <SidePanelRight
           showMunicipalities={showMunicipalities}
           setShowMunicipalities={setShowMunicipalities}
@@ -147,6 +190,7 @@ const TacticalLayout = () => {
           nightMode={nightMode}
           setNightMode={setNightMode}
         />
+
         <div className="map-container">
           <MainMap
             showMunicipalities={showMunicipalities}
@@ -154,12 +198,25 @@ const TacticalLayout = () => {
             showHistory={showHistory}
             showAliens={showAliens}
             showShelters={showShelters}
+            showNearbyShelters={showNearbyShelters}
             showWeather={showWeather}
             nightMode={nightMode}
             visibleHistoricalIds={visibleHistoricalIds}
+            radius={radius}
+            setRadius={setRadius}
+            latestLandingCoords={latestLandingCoords}
           />
         </div>
       </div>
+
+      {showNearbyShelters && (
+        <NearbySheltersControl
+          radius={radius}
+          setRadius={setRadius}
+          landingCoords={latestLandingCoords}
+          shelters={nearbyShelters}
+        />
+      )}
 
       {showHistory && (
         <HistoricalPanel
@@ -170,6 +227,35 @@ const TacticalLayout = () => {
       )}
 
       <BottomBar logItems={log} />
+
+      <LayerToggle
+        onToggleMunicipalities={() => setShowMunicipalities(!showMunicipalities)}
+        onToggleLandings={() => setShowLandings(!showLandings)}
+        onToggleHistory={() => {
+          setShowHistory(prev => {
+            if (!prev) setShowNearbyShelters(false);
+            return !prev;
+          });
+        }}
+        onToggleAliens={() => setShowAliens(!showAliens)}
+        onToggleShelters={() => setShowShelters(!showShelters)}
+        onToggleNearbyShelters={() => {
+          setShowNearbyShelters(prev => {
+            if (!prev) setShowHistory(false);
+            return !prev;
+          });
+        }}
+        onToggleWeather={() => setShowWeather(!showWeather)}
+        onToggleNightMode={() => setNightMode(!nightMode)}
+        showMunicipalities={showMunicipalities}
+        showLandings={showLandings}
+        showHistory={showHistory}
+        showAliens={showAliens}
+        showShelters={showShelters}
+        showNearbyShelters={showNearbyShelters}
+        showWeather={showWeather}
+        nightMode={nightMode}
+      />
     </div>
   );
 };
