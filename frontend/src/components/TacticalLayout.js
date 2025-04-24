@@ -17,12 +17,18 @@ import { point } from '@turf/helpers';
 import "../App.css";
 import "./TacticalLayout.css";
 
+
+const supportedMunicipalities = [
+  'תלאביביפו', 'בניברק', 'רמתגן', 'גבעתיים', 'רמתהשרון', 'חולון', 'בתים'
+];
+
+const normalize = name => name?.replace(/[\s־–-]+/g, '').trim();
+
 function getInvadedStats(aliens) {
   const map = {};
   aliens.forEach(alien => {
     const coords = alien.geometry?.coordinates;
     if (!coords || coords.length !== 2) return;
-
     const pt = point(coords);
     const match = localMunicipalities.features.find(f => booleanPointInPolygon(pt, f));
     const polygonName = match?.properties?.MUN_HEB || 'ללא שם';
@@ -46,23 +52,59 @@ const TacticalLayout = () => {
   const [showAlienStatsLayer, setShowAlienStatsLayer] = useState(false);
   const [userClosedNearbyShelters, setUserClosedNearbyShelters] = useState(false);
   const [lastLandingCode, setLastLandingCode] = useState(null);
-
   const [log, setLog] = useState([]);
   const [paused, setPaused] = useState(false);
-  const panelRef = useRef();
 
   const [invasionData, setInvasionData] = useState([]);
   const [visibleHistoricalIds, setVisibleHistoricalIds] = useState([]);
   const [historyData, setHistoryData] = useState([]);
   const [nearbyShelters, setNearbyShelters] = useState([]);
+  
+  const [muted, setMuted] = useState(false);
+  const [landingAudioReady, setLandingAudioReady] = useState(false);
+  const landingAudioRef = useRef(null);
+  
+    useEffect(() => {
+      if (typeof Audio !== "undefined") {
+        const audio = new Audio('/sounds/alien-warning.mp3');
+        audio.volume = 0.7;
+        audio.addEventListener("canplaythrough", () => {
+          setLandingAudioReady(true);
+        });
+        audio.load();
+        landingAudioRef.current = audio;
+      }
+    }, []);
+  
+    useEffect(() => {
+      if (landingAudioRef.current) {
+        landingAudioRef.current.muted = muted;
+        if (muted) {
+          landingAudioRef.current.pause();
+        } else if (landingAudioRef.current.paused && landingAudioReady) {
+          landingAudioRef.current.play().catch(err => console.warn("Resume failed:", err));
+        }
+      }
+    }, [muted, landingAudioReady]);
+  
+    const playLandingSound = () => {
+      if (muted || !landingAudioReady || !landingAudioRef.current) return;
+      landingAudioRef.current.currentTime = 0;
+      landingAudioRef.current.play().catch(err => {
+        console.warn("Audio play failed:", err);
+      });
+    };
+  
+  
+    
+  
 
+
+ 
   useEffect(() => {
     if (!showNearbyShelters || !latestLandingCoords) return;
-
     const [lat, lng] = latestLandingCoords;
-    const url = `http://localhost:5000/api/shelters-nearby?lat=${lat}&lng=${lng}&radius=${radius}`;
-
-    fetch(url)
+    fetch(`http://localhost:5000/api/shelters-nearby?lat=${lat}&lng=${lng}&radius=${radius}`)
       .then(res => res.json())
       .then(data => setNearbyShelters(Array.isArray(data) ? data : []))
       .catch(() => setNearbyShelters([]));
@@ -83,53 +125,43 @@ const TacticalLayout = () => {
   useEffect(() => {
     const latestLanding = [...invasionData].reverse().find(f => f.properties?.type === 'landing');
     if (!latestLanding?.geometry?.coordinates) return;
-  
     const [lng, lat] = latestLanding.geometry.coordinates;
-  
+
     const getMunicipalityName = (lng, lat) => {
       const pt = point([lng, lat]);
       const match = localMunicipalities.features.find(f => booleanPointInPolygon(pt, f));
-      return match?.properties?.MUN_HEB || 'Unknown Area';
+      return match?.properties?.MUN_HEB || 'לא ידוע';
     };
-  
-    const normalize = name => name.replace(/[\s־–-]+/g, '').trim();
-    const allSupportedLandings = invasionData.filter(f =>
-      f.properties?.type === 'landing' &&
-      (() => {
-        const [lng, lat] = f.geometry?.coordinates || [];
-        const name = getMunicipalityName(lng, lat);
-        return ['תלאביביפו', 'בניברק', 'רמתגן','חולון','בתים','גבעתיים','רמתהשרון'].includes(normalize(name));
-      })()
-    );
-  
+
     const landingCode = latestLanding?.properties?.landingCode;
     const latestMunicipality = getMunicipalityName(lng, lat);
-    const latestIsSupported = ['תלאביביפו', 'בניברק', 'רמתגן','חולון','בתים','גבעתיים','רמתהשרון'].includes(normalize(latestMunicipality));
-  
+    const latestIsSupported = supportedMunicipalities.includes(normalize(latestMunicipality));
+    const allSupportedLandings = invasionData.filter(f => {
+      if (f.properties?.type !== 'landing') return false;
+      const [lng, lat] = f.geometry?.coordinates || [];
+      const name = getMunicipalityName(lng, lat);
+      return supportedMunicipalities.includes(normalize(name));
+    });
+
     if (landingCode && landingCode !== lastLandingCode) {
+      playLandingSound();
       setLastLandingCode(landingCode);
-  
       if (latestIsSupported) {
         setLatestLandingCoords([lat, lng]);
-        if (!userClosedNearbyShelters) {
-          setShowNearbyShelters(true);
-        }
+        if (!userClosedNearbyShelters) setShowNearbyShelters(true);
+      } else if (allSupportedLandings.length > 0) {
+        const lastSupported = allSupportedLandings.at(-1);
+        const [lng2, lat2] = lastSupported.geometry.coordinates;
+        setLatestLandingCoords([lat2, lng2]);
       } else {
-        // keep previous coords if there are still valid supported landings
-        if (allSupportedLandings.length > 0) {
-          const lastSupported = allSupportedLandings[allSupportedLandings.length - 1];
-          const [lng2, lat2] = lastSupported.geometry.coordinates;
-          setLatestLandingCoords([lat2, lng2]);
-        } else {
-          setLatestLandingCoords(null);
-          setShowNearbyShelters(false);
-        }
+        setLatestLandingCoords(null);
+        setShowNearbyShelters(false);
       }
     }
   }, [invasionData, lastLandingCode, userClosedNearbyShelters]);
   
   
-
+  
   useEffect(() => {
     if (!invasionData || paused) return;
 
@@ -200,6 +232,8 @@ const TacticalLayout = () => {
           paused={paused}
           setPaused={setPaused}
           clearLog={() => setLog([])}
+          muted={muted}
+          setMuted={setMuted}
         />
         <Night active={nightMode} />
         <SidePanelRight

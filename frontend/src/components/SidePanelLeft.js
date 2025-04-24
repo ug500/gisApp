@@ -13,7 +13,7 @@ const getMunicipalityName = (lng, lat) => {
   return match?.properties?.MUN_HEB || 'Unknown Area';
 };
 
-const SidePanelLeft = ({ logItems = [], landings = 0, aliens = 0, paused, setPaused, clearLog }) => {
+const SidePanelLeft = ({ logItems = [], landings = 0, aliens = 0, paused, setPaused, clearLog,muted,setMuted }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [showAllBanners, setShowAllBanners] = useState(false);
   const [bannerTimestamps, setBannerTimestamps] = useState({});
@@ -177,22 +177,30 @@ const SidePanelLeft = ({ logItems = [], landings = 0, aliens = 0, paused, setPau
 
   return (
     <div className="side-panel-left">
-      <div className="divider" />
-      <div className="log-title">INVADERS LOG</div>
-      <div className="divider" />
+     <div className="title-wrapper">
+        <div className="divider" />
+        <div className="log-title">INVADERS LOG</div>
+        <div className="divider" />
+</div>
 
       <div className="status-alert-wrapper">
-        <div className="alert-lights horizontal">
-          <div className={redClass} />
-          <div className={orangeClass} />
-          <div className={yellowClass} />
-        </div>
-        <div className="status-counts">
-          <span className="count">{landings}</span>
-          <span>🛸 : 👽</span>
-          <span className="count">{aliens}</span>
-        </div>
-      </div>
+  <div className="alert-lights horizontal">
+    <div className={redClass} />
+    <div className={orangeClass} />
+    <div className={yellowClass} />
+  </div>
+
+  <div className="status-counts">
+    <span className="count">{landings}</span>
+    <span>🛸 : 👽</span>
+    <span className="count">{aliens}</span>
+  </div>
+
+  <button className="mute-button" onClick={() => setMuted(prev => !prev)}>
+    {muted ? '🔇' : '🔊'}
+  </button>
+</div>
+
 
       <div className="collapse-toggle-wrapper">
         <button className="collapse-button" onClick={() => setCollapsed(!collapsed)}>
@@ -208,21 +216,31 @@ const SidePanelLeft = ({ logItems = [], landings = 0, aliens = 0, paused, setPau
               <div className="banner-left">
                 <span className="log-icon-wrapper"><span className="ship-icon-inner">🛸</span></span>
                 <span className="log-message">Landed in</span>{" "}
-                <span className="hebrew-name">{name}</span>
+                <span className="hebrew-name">{name === 'Unknown Area' ? 'לא ידוע' : name}</span>
+
               </div>
               {isBannerNew(key) && <span className="new-badge flicker">NEW</span>}
             </div>
           );
         })}
+        
+       
+
+
 
         {visibleBanners.map(entry => {
           const key = `invade-${entry.name}`;
+          const formatHebrewName = (name) => {
+            return name?.trim() === 'Unknown Area' ? 'לא ידוע' : name;
+         };
           return (
             <div key={key} className="log-alert-banner invaded-glow">
               <div className="banner-left">
                 <span className="log-icon-wrapper"><span className="alien-icon-inner">👽</span></span>
                 <span className="log-message">Aliens invade</span>{" "}
-                <span className="hebrew-name">{entry.name}</span>
+                <span className="hebrew-name">{formatHebrewName(entry.name)}</span>
+
+
               </div>
               {isBannerNew(key) && <span className="new-badge flicker">NEW</span>}
             </div>
