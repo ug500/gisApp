@@ -9,7 +9,7 @@ import HistoricalPanel from "./HistoricalPanel";
 import LayerToggle from "../layers/LayerToggle";
 import NearbySheltersControl from "../layers/NearbySheltersControl";
 import AlienStatsLayer from '../layers/AlienStatsLayer';
-
+import Night from '../layers/Night';
 import localMunicipalities from "../municipalities.json";
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import { point } from '@turf/helpers';
@@ -160,6 +160,7 @@ const TacticalLayout = () => {
           setPaused={setPaused}
           clearLog={() => setLog([])}
         />
+        <Night active={nightMode} />
         <SidePanelRight
           showMunicipalities={showMunicipalities}
           setShowMunicipalities={setShowMunicipalities}
@@ -198,6 +199,7 @@ const TacticalLayout = () => {
             setRadius={setRadius}
             latestLandingCoords={latestLandingCoords}
             stopBlinking={stopBlinking}
+
           />
         </div>
       </div>
@@ -249,6 +251,7 @@ const TacticalLayout = () => {
         onToggleBlinking={() => setStopBlinking(prev => !prev)}
         stopBlinking={stopBlinking}
         onToggleAlienStats={() => setShowAlienStatsLayer(prev => !prev)}
+        showAlienStatsLayer={showAlienStatsLayer}
       />
     </div>
   );

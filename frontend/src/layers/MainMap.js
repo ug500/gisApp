@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Circle } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-
+import WindLayer from './WindLayer';
 import MunicipalitiesLayer from './MunicipalitiesLayer';
 import InvasionLayer from './InvasionLayer';
 import HistoricalInvasionLayer from './HistoricalInvasionLayer';
@@ -22,6 +22,7 @@ export default function MainMap({
   showAliens,
   showShelters,
   showNearbyShelters,
+  showWeather,
   nightMode,
   visibleHistoricalIds,
   radius,
@@ -73,6 +74,9 @@ export default function MainMap({
       {showLandings && invasionData.length > 0 && (
         <InvasionLayer data={invasionData} />
       )}
+
+{showWeather && <WindLayer visible={true} />}
+
 
       {showHistory && municipalities && (
         <HistoricalInvasionLayer

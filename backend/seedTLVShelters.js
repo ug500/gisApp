@@ -33,4 +33,8 @@ async function seedShelters() {
   }
 }
 
+<<<<<<< HEAD
 seedShelters();
+=======
+seedShelters();
+>>>>>>> 9a27b69ecbc5227e8cafecd8f7b967fe381f6cf3
