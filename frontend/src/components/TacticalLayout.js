@@ -17,7 +17,6 @@ import { point } from '@turf/helpers';
 import "../App.css";
 import "./TacticalLayout.css";
 
-// ✅ Alien location detection and grouping
 function getInvadedStats(aliens) {
   const map = {};
   aliens.forEach(alien => {
@@ -45,6 +44,8 @@ const TacticalLayout = () => {
   const [latestLandingCoords, setLatestLandingCoords] = useState(null);
   const [stopBlinking, setStopBlinking] = useState(false);
   const [showAlienStatsLayer, setShowAlienStatsLayer] = useState(false);
+  const [userClosedNearbyShelters, setUserClosedNearbyShelters] = useState(false);
+  const [lastLandingCode, setLastLandingCode] = useState(null);
 
   const [log, setLog] = useState([]);
   const [paused, setPaused] = useState(false);
@@ -81,13 +82,53 @@ const TacticalLayout = () => {
 
   useEffect(() => {
     const latestLanding = [...invasionData].reverse().find(f => f.properties?.type === 'landing');
-    if (latestLanding?.geometry?.coordinates) {
-      setLatestLandingCoords([
-        latestLanding.geometry.coordinates[1],
-        latestLanding.geometry.coordinates[0],
-      ]);
+    if (!latestLanding?.geometry?.coordinates) return;
+  
+    const [lng, lat] = latestLanding.geometry.coordinates;
+  
+    const getMunicipalityName = (lng, lat) => {
+      const pt = point([lng, lat]);
+      const match = localMunicipalities.features.find(f => booleanPointInPolygon(pt, f));
+      return match?.properties?.MUN_HEB || 'Unknown Area';
+    };
+  
+    const normalize = name => name.replace(/[\s־–-]+/g, '').trim();
+    const allSupportedLandings = invasionData.filter(f =>
+      f.properties?.type === 'landing' &&
+      (() => {
+        const [lng, lat] = f.geometry?.coordinates || [];
+        const name = getMunicipalityName(lng, lat);
+        return ['תלאביביפו', 'בניברק', 'רמתגן','חולון','בתים','גבעתיים','רמתהשרון'].includes(normalize(name));
+      })()
+    );
+  
+    const landingCode = latestLanding?.properties?.landingCode;
+    const latestMunicipality = getMunicipalityName(lng, lat);
+    const latestIsSupported = ['תלאביביפו', 'בניברק', 'רמתגן','חולון','בתים','גבעתיים','רמתהשרון'].includes(normalize(latestMunicipality));
+  
+    if (landingCode && landingCode !== lastLandingCode) {
+      setLastLandingCode(landingCode);
+  
+      if (latestIsSupported) {
+        setLatestLandingCoords([lat, lng]);
+        if (!userClosedNearbyShelters) {
+          setShowNearbyShelters(true);
+        }
+      } else {
+        // keep previous coords if there are still valid supported landings
+        if (allSupportedLandings.length > 0) {
+          const lastSupported = allSupportedLandings[allSupportedLandings.length - 1];
+          const [lng2, lat2] = lastSupported.geometry.coordinates;
+          setLatestLandingCoords([lat2, lng2]);
+        } else {
+          setLatestLandingCoords(null);
+          setShowNearbyShelters(false);
+        }
+      }
     }
-  }, [invasionData]);
+  }, [invasionData, lastLandingCode, userClosedNearbyShelters]);
+  
+  
 
   useEffect(() => {
     if (!invasionData || paused) return;
@@ -199,7 +240,6 @@ const TacticalLayout = () => {
             setRadius={setRadius}
             latestLandingCoords={latestLandingCoords}
             stopBlinking={stopBlinking}
-
           />
         </div>
       </div>
@@ -233,11 +273,27 @@ const TacticalLayout = () => {
         onToggleAliens={() => setShowAliens(!showAliens)}
         onToggleShelters={() => setShowShelters(!showShelters)}
         onToggleNearbyShelters={() => {
+          const supportedLandingExists = invasionData.some(f => {
+            if (f.properties?.type !== 'landing') return false;
+            const [lng, lat] = f.geometry?.coordinates || [];
+            const name = point([lng, lat]);
+            const match = localMunicipalities.features.find(f => booleanPointInPolygon(name, f));
+            const norm = match?.properties?.MUN_HEB?.replace(/[\s־–-]+/g, '').trim();
+            return ['תלאביביפו', 'בניברק', 'רמתגן','חולון','בתים','גבעתיים','רמתהשרון'].includes(norm);
+          });
+        
+          if (!supportedLandingExists) {
+            // Still let the panel open but show warning inside
+            setLatestLandingCoords(null);
+          }
+        
+          setUserClosedNearbyShelters(true);
           setShowNearbyShelters(prev => {
             if (!prev) setShowHistory(false);
             return !prev;
           });
         }}
+        
         onToggleWeather={() => setShowWeather(!showWeather)}
         onToggleNightMode={() => setNightMode(!nightMode)}
         showMunicipalities={showMunicipalities}

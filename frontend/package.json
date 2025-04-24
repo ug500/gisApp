@@ -19,6 +19,7 @@
     "axios": "^1.8.4",
     "cors": "^2.8.5",
     "leaflet": "^1.9.4",
+    "leaflet-velocity": "^2.1.4",
     "polyline": "^0.2.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
