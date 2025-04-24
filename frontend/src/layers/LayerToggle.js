@@ -21,7 +21,9 @@ function LayerToggle({
   showShelters,
   showNearbyShelters,
   showWeather,
-  nightMode
+  nightMode,
+  showAlienStatsLayer
+
 }) {
   const getClass = (isActive) => `layer-button${isActive ? ' active' : ''}`;
 
@@ -38,7 +40,9 @@ function LayerToggle({
         <button onClick={onToggleShelters} className={getClass(showShelters)}>🛡️</button>
         <button onClick={onToggleNearbyShelters} className={getClass(showNearbyShelters)}>📍</button>
         <button onClick={onToggleHistory} className={getClass(showHistory)}>⏱️</button>
-        <button onClick={handleAlienInfoToggle} className={getClass(showAliens)}>👾</button>
+        <button onClick={handleAlienInfoToggle} className={getClass(showAlienStatsLayer)}>👾</button>
+
+
         <button onClick={onToggleWeather} className={getClass(showWeather)}>🌦️</button>
         <button onClick={onToggleNightMode} className={getClass(nightMode)}>🌙</button>
         <button onClick={onToggleBlinking} className={getClass(stopBlinking)}>
