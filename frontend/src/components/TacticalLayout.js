@@ -32,7 +32,7 @@ function getInvadedStats(aliens) {
   return Object.entries(map).map(([polygonName, count]) => ({ polygonName, count }));
 }
 
-const TacticalLayout = () => {
+const TacticalLayout = ({ currentUser, onLogout }) => {
   const [showMunicipalities, setShowMunicipalities] = useState(true);
   const [showLandings, setShowLandings] = useState(true);
   const [showHistory, setShowHistory] = useState(false);
@@ -150,7 +150,7 @@ const TacticalLayout = () => {
 
   return (
     <div className="tactical-layout">
-      <TopBar />
+      <TopBar currentUser={currentUser} onLogout={onLogout} />
       <div className="tactical-center">
         <SidePanelLeft
           logItems={log}

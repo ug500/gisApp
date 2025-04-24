@@ -1,55 +1,92 @@
 .top-bar-wrapper {
-  position: relative;
-  height: 60px; /* 45px טופ באר + 15px סטריפ */
-  width: 100%;
-  display: flex;
-  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }
 
 .top-bar {
-  height: 45px;
-  background-color: #111;
+  background-color: #1a1a1a;
   color: white;
+  padding: 10px 20px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  z-index: 2;
   position: relative;
 }
 
-.top-bar-strip {
-  height: 15px;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  z-index: 1;
-  pointer-events: none;
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .dot {
-  height: 10px;
   width: 10px;
-  background-color: #00bfff; /* תכלת בוהק */
+  height: 10px;
+  background-color: #00ff00;
   border-radius: 50%;
-  display: inline-block;
   margin-right: 8px;
-  box-shadow: 0 0 6px #00bfff;
-  animation: blink 1s infinite;
+  animation: blink 1.5s infinite;
 }
 
 @keyframes blink {
-  0%, 100% { opacity: 1; }
+  0% { opacity: 1; }
   50% { opacity: 0.3; }
+  100% { opacity: 1; }
 }
 
 .active-label {
-  color: white;
   font-weight: bold;
+  color: white;
   font-size: 14px;
   letter-spacing: 1px;
   text-shadow:
     0 0 4px #00bfff,
     0 0 8px #00bfff,
     0 0 12px #00ffff;
+}
+
+.user-greeting {
+  font-size: 14px;
+  color: white;
+  font-weight: 500;
+}
+
+.logout-container {
+  margin-left: auto;
+  padding-right: 20px;
+}
+
+.logout-button {
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+  padding: 5px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: white;
+  color: #1a1a1a;
+}
+
+.top-bar-strip {
+  height: 2px;
+  background: linear-gradient(90deg, #4CAF50, #2196F3);
+  width: 100%;
 }
 
