@@ -39,21 +39,21 @@ const BottomBar = ({ logItems = [] }) => {
   return (
     <div className="bottom-bar-wrapper">
       <div className="top-strip" />
-
+  
       <div className="bottom-bar">
         <div className="ticker-area">
           <div className="ticker">
             <span dangerouslySetInnerHTML={{ __html: tickerText }} />
           </div>
         </div>
-
+  
         {resultLine && (
           <div
             className="result-line"
             dangerouslySetInnerHTML={{ __html: resultLine }}
           />
         )}
-
+  
         <input
           type="text"
           className="search-input"
@@ -64,9 +64,15 @@ const BottomBar = ({ logItems = [] }) => {
         <button className="submit-button" onClick={handleSearch}>
           Submit
         </button>
+  
+        {/* 👇 Here is the new copyright line */}
+        <div className="copyright">
+          Copyright 2025 © by Amos B. Shmulik G. & Uzi G.
+        </div>
       </div>
     </div>
   );
+  
 };
 
 export default BottomBar;

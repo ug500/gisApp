@@ -37,7 +37,7 @@ function getInvadedStats(aliens) {
   return Object.entries(map).map(([polygonName, count]) => ({ polygonName, count }));
 }
 
-const TacticalLayout = () => {
+const TacticalLayout = ({ currentUser, onLogout }) => {
   const [showMunicipalities, setShowMunicipalities] = useState(true);
   const [showLandings, setShowLandings] = useState(true);
   const [showHistory, setShowHistory] = useState(false);
@@ -54,6 +54,8 @@ const TacticalLayout = () => {
   const [lastLandingCode, setLastLandingCode] = useState(null);
   const [log, setLog] = useState([]);
   const [paused, setPaused] = useState(false);
+  
+  const panelRef = useRef();
 
   const [invasionData, setInvasionData] = useState([]);
   const [visibleHistoricalIds, setVisibleHistoricalIds] = useState([]);
@@ -81,19 +83,29 @@ const TacticalLayout = () => {
         landingAudioRef.current.muted = muted;
         if (muted) {
           landingAudioRef.current.pause();
-        } else if (landingAudioRef.current.paused && landingAudioReady) {
-          landingAudioRef.current.play().catch(err => console.warn("Resume failed:", err));
         }
+        // Remove auto-play logic here! 
       }
-    }, [muted, landingAudioReady]);
+    }, [muted]);
+    
   
     const playLandingSound = () => {
       if (muted || !landingAudioReady || !landingAudioRef.current) return;
+    
       landingAudioRef.current.currentTime = 0;
       landingAudioRef.current.play().catch(err => {
         console.warn("Audio play failed:", err);
       });
+    
+      // Stop the alarm after exactly 5 seconds
+      setTimeout(() => {
+        if (landingAudioRef.current && !muted) {
+          landingAudioRef.current.pause();
+          landingAudioRef.current.currentTime = 0; // Reset to start
+        }
+      }, 6500); // 6500 milliseconds = 6.5 seconds
     };
+    
   
   
     
@@ -223,7 +235,7 @@ const TacticalLayout = () => {
 
   return (
     <div className="tactical-layout">
-      <TopBar />
+       <TopBar currentUser={currentUser} onLogout={onLogout} />
       <div className="tactical-center">
         <SidePanelLeft
           logItems={log}
