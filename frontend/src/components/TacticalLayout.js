@@ -18,6 +18,7 @@ import "../App.css";
 import "./TacticalLayout.css";
 
 
+
 const supportedMunicipalities = [
   'תלאביביפו', 'בניברק', 'רמתגן', 'גבעתיים', 'רמתהשרון', 'חולון', 'בתים'
 ];
@@ -55,7 +56,7 @@ const TacticalLayout = ({ currentUser, onLogout }) => {
   const [log, setLog] = useState([]);
   const [paused, setPaused] = useState(false);
   
-  const panelRef = useRef();
+  const mapRef = useRef();
 
   const [invasionData, setInvasionData] = useState([]);
   const [visibleHistoricalIds, setVisibleHistoricalIds] = useState([]);
@@ -65,6 +66,10 @@ const TacticalLayout = ({ currentUser, onLogout }) => {
   const [muted, setMuted] = useState(false);
   const [landingAudioReady, setLandingAudioReady] = useState(false);
   const landingAudioRef = useRef(null);
+  const [selectedLandingInfo, setSelectedLandingInfo] = useState(null);
+  const [submitId, setSubmitId] = useState(0); 
+
+
   
     useEffect(() => {
       if (typeof Audio !== "undefined") {
@@ -232,10 +237,10 @@ const TacticalLayout = ({ currentUser, onLogout }) => {
 
   const aliens = invasionData.filter(f => f.properties?.type === 'alien');
   const landings = invasionData.filter(f => f.properties?.type === 'landing');
-
+  
   return (
     <div className="tactical-layout">
-       <TopBar currentUser={currentUser} onLogout={onLogout} />
+      <TopBar currentUser={currentUser} onLogout={onLogout} />
       <div className="tactical-center">
         <SidePanelLeft
           logItems={log}
@@ -248,6 +253,8 @@ const TacticalLayout = ({ currentUser, onLogout }) => {
           setMuted={setMuted}
         />
         <Night active={nightMode} />
+  
+       
         <SidePanelRight
           showMunicipalities={showMunicipalities}
           setShowMunicipalities={setShowMunicipalities}
@@ -271,22 +278,32 @@ const TacticalLayout = ({ currentUser, onLogout }) => {
             invadedStats={getInvadedStats(aliens)}
           />
         )}
-        <div className="map-container">
-          <MainMap
-            showMunicipalities={showMunicipalities}
-            showLandings={showLandings}
-            showHistory={showHistory}
-            showAliens={showAliens}
-            showShelters={showShelters}
-            showNearbyShelters={showNearbyShelters}
-            showWeather={showWeather}
-            nightMode={nightMode}
-            visibleHistoricalIds={visibleHistoricalIds}
-            radius={radius}
-            setRadius={setRadius}
-            latestLandingCoords={latestLandingCoords}
-            stopBlinking={stopBlinking}
-          />
+
+        
+        <div className="map-container"  style={{ height: "100vh", width: "100%" }}>
+          
+        <MainMap
+  showMunicipalities={showMunicipalities}
+  showLandings={showLandings}
+  showHistory={showHistory}
+  showAliens={showAliens}
+  showShelters={showShelters}
+  showNearbyShelters={showNearbyShelters}
+  showWeather={showWeather}
+  nightMode={nightMode}
+  visibleHistoricalIds={visibleHistoricalIds}
+  radius={radius}
+  setRadius={setRadius}
+  latestLandingCoords={latestLandingCoords}
+  stopBlinking={stopBlinking}
+  
+  // ✅ Add this new prop to receive the mapRef
+  
+   selectedLandingInfo={selectedLandingInfo}
+   
+   mapRef={mapRef}
+   submitId={submitId} 
+/>
         </div>
       </div>
       {showNearbyShelters && (
@@ -306,7 +323,20 @@ const TacticalLayout = ({ currentUser, onLogout }) => {
           )}
         />
       )}
-      <BottomBar logItems={log} />
+       <BottomBar
+        logItems={log}
+        onLandingSelected={(landingInfo) => {
+          console.log("TacticalLayout received landingInfo:", landingInfo);
+          setSelectedLandingInfo(landingInfo);
+          setSubmitId(prev => prev + 1); // ✅ Increment trigger
+        }}
+      />
+
+
+
+
+
+
       <LayerToggle
         onToggleMunicipalities={() => setShowMunicipalities(!showMunicipalities)}
         onToggleLandings={() => setShowLandings(!showLandings)}
